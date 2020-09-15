@@ -7,7 +7,7 @@ Description:
 '''
 import sys
 import PyQt5
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFrame
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFrame, QLabel, QPushButton, QHBoxLayout
 from PyQt5.QtGui import QColor
 
 '''
@@ -42,8 +42,7 @@ class MainWindow(QMainWindow):
         #self...()
         #self...()
         self.tagsframe()
-        
-
+        self.menuframe()
 
         self.show()
 
@@ -54,7 +53,36 @@ class MainWindow(QMainWindow):
         top.resize(200, 800)
         top.setStyleSheet('border: 5px solid black;')
 
-    
+    #Creates top frame to hold the add and home button as well as the logo
+    def menuframe(self):
+        menu_frame = QFrame(self)
+        menu_frame.resize(500, 30)
+        menu_frame.setStyleSheet('border: 5px solid black;')
+
+        logo_label = QLabel('Logo', self)
+
+        add_button = QPushButton("Add", self) 
+        add_button.move(350,5)
+        #add_button.clicked.connect(self.clicked)
+
+        home_button = QPushButton("Home", self) 
+        home_button.move(450,5)
+        #home_button.clicked.connect(self.clicked)
+
+    '''def clicked():
+        print('pressed')'''
+
+    '''def createGridLayout(self):
+        self.horizontalGroupBox = QGroupBox('')
+        layout = QGridLayout()
+        layout.setColumnStretch(0, 1)
+        layout.setColumnStretch(1, 4)
+        layout.setColumnStretch(2, 3)
+        layout.setColumnStretch(3, 3)
+        layout.setColumnStretch(4, 8)
+
+        self.horizontalGroupBox.setLayout(layout)'''
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
