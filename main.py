@@ -7,8 +7,10 @@ Description:
 '''
 import sys
 import PyQt5
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFrame, QLabel, QPushButton, QHBoxLayout
-from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFrame, QLabel, QPushButton, QHBoxLayout, QSplashScreen
+from PyQt5.QtGui import QColor, QPixmap
+from PyQt5.QtCore import Qt, QTimer
+from PyQt5 import QtTest
 
 '''
 Note:
@@ -22,6 +24,25 @@ Note:
 
     This may be a James only error though
 '''
+
+class SplashScreen(QWidget):
+    def __init__(self):
+        super().__init__()    
+        self.setFixedSize(200, 200)
+        self.setWindowFlags(Qt.WindowStayOnTopHint | Qt.CustomizeWindowHint)
+
+        self.label = QLabel('<font size=12> This is the splash screen </font>', self)
+        timer = QTimer(self)
+        
+        timer.singleShot(2000, self.closeSplashScreen)
+
+        self.show()
+
+    # def loadSplashScreen(self):
+    #     self.show()
+
+    def closeSplashScreen(self):
+        self.close()
 
 '''
 Description:
@@ -50,6 +71,7 @@ class MainWindow(QMainWindow):
     #Create left hand frame to hold the tags menu 
     def tagsframe(self):
         top = QFrame(self)
+        top.setWindowFlags
         top.resize(200, 800)
         top.setStyleSheet('border: 5px solid black;')
 
@@ -86,7 +108,20 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+   
+    # Splash screen & logo
+    pixmap = QPixmap(":/logo.png")
+    splashScreen = QSplashScreen(pixmap)
+    splashScreen.show()
+
+    QtTest.QTest.qSleep(20000)
+
+    # lbl.setWindowFlags(Qt.SplashScreen | Qt.FramelessWindowHint)
+    # lbl.show()
+
     window = MainWindow()
+    splashScreen.finish(window)
+
     app.exec_()
 
 
