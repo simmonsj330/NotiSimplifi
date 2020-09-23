@@ -25,25 +25,6 @@ Note:
     This may be a James only error though
 '''
 
-class SplashScreen(QWidget):
-    def __init__(self):
-        super().__init__()    
-        self.setFixedSize(200, 200)
-        self.setWindowFlags(Qt.WindowStayOnTopHint | Qt.CustomizeWindowHint)
-
-        self.label = QLabel('<font size=12> This is the splash screen </font>', self)
-        timer = QTimer(self)
-        
-        timer.singleShot(2000, self.closeSplashScreen)
-
-        self.show()
-
-    # def loadSplashScreen(self):
-    #     self.show()
-
-    def closeSplashScreen(self):
-        self.close()
-
 '''
 Description:
     This class inherits from QMainWindow and is used to initialize the application GUI
@@ -114,15 +95,9 @@ if __name__ == '__main__':
     splashScreen = QSplashScreen(pixmap)
     splashScreen.show()
 
-    #QtTest.QTest.qSleep(20000)
-
-    # lbl.setWindowFlags(Qt.SplashScreen | Qt.FramelessWindowHint)
-    # lbl.show()
-
     window = MainWindow()
+     
+    # stop showing splashscreen once main form has loaded in
     splashScreen.finish(window)
 
     app.exec_()
-
-
-  
