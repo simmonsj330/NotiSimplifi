@@ -114,7 +114,7 @@ if __name__ == '__main__':
     splashScreen = QSplashScreen(pixmap)
     splashScreen.show()
 
-    QtTest.QTest.qSleep(20000)
+    #QtTest.QTest.qSleep(20000)
 
     # lbl.setWindowFlags(Qt.SplashScreen | Qt.FramelessWindowHint)
     # lbl.show()
