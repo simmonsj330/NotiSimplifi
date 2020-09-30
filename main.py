@@ -62,7 +62,9 @@ class MainWindow(QMainWindow):
         menu_frame.resize(500, 30)
         menu_frame.setStyleSheet('border: 5px solid black;')
 
-        logo_label = QLabel('Logo', self)
+        pixmap = QPixmap('logo.png')
+        #self.resize(pixmap.width(), pixmap.height())
+        #logo_label = QLabel('logo.png', self)
 
         add_button = QPushButton("Add", self) 
         add_button.move(350,5)
@@ -94,6 +96,11 @@ if __name__ == '__main__':
     pixmap = QPixmap(":/logo.png")
     splashScreen = QSplashScreen(pixmap)
     splashScreen.show()
+
+    #QtTest.QTest.qSleep(20000)
+
+    # lbl.setWindowFlags(Qt.SplashScreen | Qt.FramelessWindowHint)
+    # lbl.show()
 
     window = MainWindow()
      
