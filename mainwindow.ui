@@ -98,7 +98,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -134,6 +134,67 @@
       <property name="overwriteMode">
        <bool>false</bool>
       </property>
+     </widget>
+     <widget class="QGroupBox" name="NotesToolbar_2">
+      <property name="geometry">
+       <rect>
+        <x>1120</x>
+        <y>10</y>
+        <width>61</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="2" column="0">
+        <widget class="QToolButton" name="toolButton_4">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources/icons.qrc">
+           <normaloff>:/underline_icon/underline_icon_16x16.ico</normaloff>
+           <normalon>:/bold_icon/bold_icon_16x16.ico</normalon>:/underline_icon/underline_icon_16x16.ico</iconset>
+         </property>
+         <property name="toolButtonStyle">
+          <enum>Qt::ToolButtonIconOnly</enum>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QToolButton" name="toolButton_5">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources/icons.qrc">
+           <normaloff>:/italic_icon/italics_icon_16x16.ico</normaloff>:/italic_icon/italics_icon_16x16.ico</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QToolButton" name="toolButton_6">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources/icons.qrc">
+           <normaloff>:/bold_icon/bold_icon_16x16.ico</normaloff>:/bold_icon/bold_icon_16x16.ico</iconset>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
@@ -171,6 +232,67 @@
        <bool>false</bool>
       </property>
      </widget>
+     <widget class="QGroupBox" name="NotesToolbar">
+      <property name="geometry">
+       <rect>
+        <x>1120</x>
+        <y>10</y>
+        <width>61</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="2" column="0">
+        <widget class="QToolButton" name="toolButton_3">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources/icons.qrc">
+           <normaloff>:/underline_icon/underline_icon_16x16.ico</normaloff>
+           <normalon>:/bold_icon/bold_icon_16x16.ico</normalon>:/underline_icon/underline_icon_16x16.ico</iconset>
+         </property>
+         <property name="toolButtonStyle">
+          <enum>Qt::ToolButtonIconOnly</enum>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QToolButton" name="toolButton">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources/icons.qrc">
+           <normaloff>:/italic_icon/italics_icon_16x16.ico</normaloff>:/italic_icon/italics_icon_16x16.ico</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QToolButton" name="toolButton_2">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources/icons.qrc">
+           <normaloff>:/bold_icon/bold_icon_16x16.ico</normaloff>:/bold_icon/bold_icon_16x16.ico</iconset>
+         </property>
+         <property name="autoRaise">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </widget>
    <zorder>tabWidget</zorder>
@@ -192,6 +314,8 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources/icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
