@@ -12,14 +12,61 @@ class TabBar(QTabBar):
     def __init__(self, parent):
         super(TabBar, self).__init__()
         self.parent = parent;
+        # timer = QTimer(self)
+        # timer.timeout.connect(self.displayCloseButton)
+        # timer.start(100)
+        # self.setTabsClosable(False)
         self.setStyleSheet("""
             QTabBar::close-button { 
                 image: url(delete_tab.png); 
                 subcontrol-position: left; 
                 }
             """)
+        # self.setMouseTracking(True)
 
-    # make all tabs same size even as more tabs are added
+    # def enterEvent(self, event):
+    #     self.setTabsClosable(True)
+    #     mpos = event.pos()
+    #     idx = self.tabAt(mpos)
+    #     if idx != -1:
+    #         self.setTabsClosable(True)
+    #         self.tabButton(idx, QTabBar.LeftSide).resize(20, 20)
+    #     
+    #     event.ignore()
+    #     return
+
+    # def leaveEvent(self, event):
+    #     self.setTabsClosable(True)
+    #     mpos = event.pos()
+    #     idx = self.tabAt(mpos)
+    #     if idx != -1:
+    #         self.setTabsClosable(True)
+    #         self.tabButton(idx, QTabBar.LeftSide).resize(0, 0)
+
+
+    #     event.ignore()
+    #     return
+
+    # def mouseMoveEvent(self, event):
+    #     mpos = event.pos()
+    #     idx = self.tabAt(mpos)
+    #     if idx != -1:
+    #         # self.setTabButton(idx, QtGui.QtabBar.RightSide, None)
+    #         self.setTabsClosable(True)
+    #         self.tabButton(idx, QTabBar.LeftSide).resize(20, 20)
+
+    #     else:
+    #         self.setTabsClosable(False)
+    #         self.tabButton(self.currentIndex(), QTabBar.LeftSide).resize(0, 0)
+
+    #     event.ignore()
+    #     return
+
+    # def displayCloseButton(self):
+    #     if self.underMouse():
+    #         print("At index:", self.currentIndex(), ", the width is", self.width())
+    #         self.setTabButton(idx, QtGui.QtabBar.RightSide, None)
+
     def tabSizeHint(self, index):
         size = QTabBar.tabSizeHint(self, index)
  
@@ -35,7 +82,20 @@ class TabBar(QTabBar):
 
         return QSize(width, size.height())
 
-# custom TabWidget for notes section of main form
+    # based on https://stackoverflow.com/questions/44450775/pyqt-gui-with-multiple-tabs
+    def mouseDoubleClickEvent(self, event):
+        if event.button() != Qt.LeftButton:
+            super(TabBar, self).mouseDoubleClickEvent(event)
+
+        index = self.currentIndex()
+        ok = True
+        self.input_dialog = QInputDialog()
+
+        newName, ok = QInputDialog.getText(self, '','New file name:')
+
+        if ok:
+            self.setTabText(index, newName)
+
 class NotesTabWidget(QtWidgets.QTabWidget):
     def __init__(self, parent):
         super(NotesTabWidget, self).__init__(parent)
@@ -59,13 +119,9 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.setTabsClosable(True)
         self.setMovable(True)
         self.setDocumentMode(True)
-
-        # this connects the close connected event to the
-        # close tab function down below
         self.tabCloseRequested.connect(self.close_tab)
         self.add_new_tab()
 
-    # function for dynamically adding a tab when the user hits the plus button in tabbar
     def add_new_tab(self, label="unititled.txt"):
         self.tab = QtWidgets.QWidget()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
@@ -88,7 +144,6 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.addTab(self.tab, label)
  
     def close_tab(self, index):
-        # stops user from closing tab if it is the only open tab
         if self.count() < 2:
             return
 
@@ -224,6 +279,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton_2.setText(_translate("MainWindow", "Home"))
         self.pushButton.setText(_translate("MainWindow", "Add"))
+        # self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Tab 1"))
         self.toolButton.setText(_translate("MainWindow", "..."))
         self.toolButton_2.setText(_translate("MainWindow", "..."))
         self.toolButton_3.setText(_translate("MainWindow", "..."))

@@ -43,3 +43,4 @@ Thumbs.db
 # BIN #
 #######
 bin/
+__pycache__/
