@@ -95,6 +95,7 @@ class TabBar(QTabBar):
         newName, ok = QInputDialog.getText(self, '','New file name:')
 
         if ok:
+            newName = self.parent.get_valid_name(newName)
             self.setTabText(index, newName)
 
 class NotesTabWidget(QtWidgets.QTabWidget):
@@ -123,7 +124,41 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.tabCloseRequested.connect(self.close_tab)
         self.add_new_tab()
 
-    def add_new_tab(self, label="untitled.txt"):
+    # this prevents duplicate file names so that way we don't overwrite
+    # any existing note files
+    def get_valid_name(self, label):
+        # remove leading and trailing whitespace
+        label = label.strip()
+
+        # create list of all current file names
+        current_tab_names = [self.tabBar().tabText(i) for i in range(self.count())]
+        saved_file_names = [os.path.basename(name) for name in glob.glob("saved_notes/*.txt")]
+    
+        # combines the two lists above into a single list of unique values
+        used_names = list(set(current_tab_names + saved_file_names))
+
+        taken = True
+        base_name = label
+        num = 1 
+        while True:
+            label += '.txt'
+
+            # This try catch is necessary because {list}.index() will return 
+            # a ValueError if a match isn't found. If a ValueError is returned
+            # then we know that a file name is valid and we can break out of 
+            # the loop.
+            try:
+                temp = used_names.index(label)
+            except ValueError:
+                break
+
+            # if we get here name is taken
+            label = base_name + str(num)
+            num+=1
+
+        return label
+ 
+    def add_new_tab(self, label="untitled"):
         self.tab = QtWidgets.QWidget()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -143,7 +178,12 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.plainTextEdit.setObjectName("plainTextEdit")
         self.plainTextEdit.textChanged.connect(self.save_tab)
         self.horizontalLayout_7.addWidget(self.plainTextEdit)
+
+        label = self.get_valid_name(label)
+        
         self.addTab(self.tab, label)
+
+        self.setCurrentWidget(self.tab)
 
     def close_tab(self, index):
         # will not close current tab if it's the only tab open
