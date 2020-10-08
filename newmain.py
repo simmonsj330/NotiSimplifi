@@ -2,6 +2,7 @@
 
 import sys
 import os
+import glob
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QPixmap, QPainter
 from PyQt5.QtWidgets import QSplashScreen, QTabBar, QInputDialog
@@ -122,7 +123,7 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.tabCloseRequested.connect(self.close_tab)
         self.add_new_tab()
 
-    def add_new_tab(self, label="unititled.txt"):
+    def add_new_tab(self, label="untitled.txt"):
         self.tab = QtWidgets.QWidget()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -140,15 +141,23 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         sizePolicy.setHeightForWidth(self.plainTextEdit.sizePolicy().hasHeightForWidth())
         self.plainTextEdit.setSizePolicy(sizePolicy)
         self.plainTextEdit.setObjectName("plainTextEdit")
+        self.plainTextEdit.textChanged.connect(self.save_tab)
         self.horizontalLayout_7.addWidget(self.plainTextEdit)
         self.addTab(self.tab, label)
- 
+
     def close_tab(self, index):
+        # will not close current tab if it's the only tab open
         if self.count() < 2:
             return
-
         self.removeTab(index)
 
+    def save_tab(self):
+        note_text = self.plainTextEdit.toPlainText()
+        # TODO: change this to {current directory}/saved_notes/{note_name}
+        file_name = 'saved_notes/' + self.tabText(self.currentIndex())
+        with open(file_name, 'w') as note:
+            note.write(note_text)
+    
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
