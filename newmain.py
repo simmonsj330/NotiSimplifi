@@ -183,6 +183,8 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         
         self.addTab(self.tab, label)
 
+        self.setCurrentWidget(self.tab)
+
     def close_tab(self, index):
         # will not close current tab if it's the only tab open
         if self.count() < 2:
