@@ -300,13 +300,19 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.Box)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
+
+        #Added this line to show menu bar in the app window
+        self.menubar.setNativeMenuBar(False)      
+
         self.menubar.setGeometry(QtCore.QRect(0, 0, 747, 22))
         self.menubar.setObjectName("menubar")
+        self.menu_Notisimplifi = QtWidgets.QMenu(self.menubar)
+        self.menu_Notisimplifi.setObjectName("menu_Notisimplifi")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-
+        self.menubar.addAction(self.menu_Notisimplifi.menuAction())
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -319,6 +325,7 @@ class Ui_MainWindow(object):
         self.toolButton.setText(_translate("MainWindow", "..."))
         self.toolButton_2.setText(_translate("MainWindow", "..."))
         self.toolButton_3.setText(_translate("MainWindow", "..."))
+        self.menu_Notisimplifi.setTitle(_translate("MainWindow", "&Notisimplifi"))
 
 #executes program
 if __name__ == "__main__":
