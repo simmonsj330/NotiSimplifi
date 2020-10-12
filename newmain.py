@@ -4,8 +4,8 @@ import sys
 import os
 import glob
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QPixmap, QPainter
-from PyQt5.QtWidgets import QSplashScreen, QTabBar, QInputDialog
+from PyQt5.QtGui import QPixmap, QPainter, QIcon
+from PyQt5.QtWidgets import QSplashScreen, QTabBar, QInputDialog, QAction
 from PyQt5.QtCore import QEventLoop, QTimer, Qt, QSize, pyqtSlot
 from mainwindow import Ui_MainWindow
 
@@ -277,19 +277,19 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.toolButton = QtWidgets.QToolButton(self.Tools)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("resources/italics_icon_16x16.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("resources/italics.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton.setIcon(icon)
         self.toolButton.setObjectName("toolButton")
         self.verticalLayout.addWidget(self.toolButton)
         self.toolButton_2 = QtWidgets.QToolButton(self.Tools)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("resources/bold_icon_16x16.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("resources/bold.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_2.setIcon(icon1)
         self.toolButton_2.setObjectName("toolButton_2")
         self.verticalLayout.addWidget(self.toolButton_2)
         self.toolButton_3 = QtWidgets.QToolButton(self.Tools)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("resources/underline_icon_16x16.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("resources/underline.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_3.setIcon(icon2)
         self.toolButton_3.setObjectName("toolButton_3")
         self.verticalLayout.addWidget(self.toolButton_3)
