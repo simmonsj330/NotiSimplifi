@@ -229,6 +229,20 @@ class Ui_MainWindow(object):
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
+
+        self.treeWidget = QtWidgets.QTreeWidget(self.Tags)
+        self.treeWidget.setUniformRowHeights(False)
+        self.treeWidget.setObjectName("treeWidget")
+        item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
+        item_1 = QtWidgets.QTreeWidgetItem(item_0)
+        item_1 = QtWidgets.QTreeWidgetItem(item_0)
+        item_1 = QtWidgets.QTreeWidgetItem(item_0)
+        item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
+        item_1 = QtWidgets.QTreeWidgetItem(item_0)
+        item_1 = QtWidgets.QTreeWidgetItem(item_0)
+        item_1 = QtWidgets.QTreeWidgetItem(item_0)
+        self.verticalLayout_2.addWidget(self.treeWidget)
+
         self.widget = QtWidgets.QWidget(self.Tags)
         self.widget.setObjectName("widget")
         self.verticalLayout_2.addWidget(self.widget)
@@ -326,6 +340,18 @@ class Ui_MainWindow(object):
         self.toolButton_2.setText(_translate("MainWindow", "..."))
         self.toolButton_3.setText(_translate("MainWindow", "..."))
         self.menu_Notisimplifi.setTitle(_translate("MainWindow", "&Notisimplifi"))
+
+        self.treeWidget.headerItem().setText(0, _translate("MainWindow", "Senior Courses"))
+        #__sortingEnabled = self.treeWidget.isSortingEnabled()
+        self.treeWidget.setSortingEnabled(False)
+        self.treeWidget.topLevelItem(0).setText(0, _translate("MainWindow", "Senior Design"))
+        self.treeWidget.topLevelItem(0).child(0).setText(0, _translate("MainWindow", "Intro to Course"))
+        self.treeWidget.topLevelItem(0).child(1).setText(0, _translate("MainWindow", "Resume/CV"))
+        self.treeWidget.topLevelItem(0).child(2).setText(0, _translate("MainWindow", "Project Management"))
+        self.treeWidget.topLevelItem(1).setText(0, _translate("MainWindow", "Software Engineering"))
+        self.treeWidget.topLevelItem(1).child(0).setText(0, _translate("MainWindow", "Project Iterations"))
+        self.treeWidget.topLevelItem(1).child(1).setText(0, _translate("MainWindow", "Process"))
+        self.treeWidget.topLevelItem(1).child(2).setText(0, _translate("MainWindow", "Usability"))
 
 #executes program
 if __name__ == "__main__":
