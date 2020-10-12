@@ -204,6 +204,12 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu_Notisimplifi">
+    <property name="title">
+     <string>&amp;Notisimplifi</string>
+    </property>
+   </widget>
+   <addaction name="menu_Notisimplifi"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
