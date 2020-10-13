@@ -172,6 +172,15 @@ class NotesTabWidget(QtWidgets.QTabWidget):
             else:
                 self.widget(i).plainTextEdit.setFontWeight(QtGui.QFont.Bold)
 
+    def setUnderline(self):
+        underline = self.currentWidget().plainTextEdit.fontUnderline()
+        for i in range(self.count()):
+            if underline:
+                self.widget(i).plainTextEdit.setFontUnderline(False)
+            else:
+                self.widget(i).plainTextEdit.setFontUnderline(True)
+
+
     def close_tab(self, index):
         # will not close current tab if it's the only tab open
         if self.count() < 2:
@@ -298,6 +307,7 @@ class Ui_MainWindow(object):
         self.underlineButton.setIcon(icon2)
         self.underlineButton.setObjectName("underlineButton")
         self.verticalLayout.addWidget(self.underlineButton)
+        self.underlineButton.clicked.connect(self.tabWidget.setUnderline)
 
         self.horizontalLayout_9.addLayout(self.verticalLayout)
         self.horizontalLayout_3.addWidget(self.Tools, 0, QtCore.Qt.AlignTop)
