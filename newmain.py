@@ -152,6 +152,14 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.addTab(self.tab, label)
 
         self.setCurrentWidget(self.tab)
+	
+    def setItalic(self):
+        italic = self.currentWidget().plainTextEdit.fontItalic()
+        for i in range(self.count()):
+            if italic:
+                self.widget(i).plainTextEdit.setFontItalic(False)
+            else:
+                self.widget(i).plainTextEdit.setFontItalic(True)
 
     def setBold(self):
         # get current text edit font weight
@@ -274,6 +282,7 @@ class Ui_MainWindow(object):
         self.italicButton.setIcon(icon)
         self.italicButton.setObjectName("italicButton")
         self.verticalLayout.addWidget(self.italicButton)
+        self.italicButton.clicked.connect(self.tabWidget.setItalic)
 
         self.boldButton = QtWidgets.QToolButton(self.Tools)
         icon1 = QtGui.QIcon()
