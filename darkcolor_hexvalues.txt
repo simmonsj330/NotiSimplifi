@@ -1,0 +1,12 @@
+Darkmode color hex values:
+
+00 DP: #121212
+01 DP: #1c1e1f
+02 DP: #212325
+03 DP: #232527
+04 DP: #252729
+06 DP: #2a2c2e
+08 DP: #2c2e30
+12 DP: #303336
+16 DP: #333639
+24 DP: #35383b

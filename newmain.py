@@ -23,50 +23,6 @@ class TabBar(QTabBar):
                 subcontrol-position: left; 
                 }
             """)
-        # self.setMouseTracking(True)
-
-    # def enterEvent(self, event):
-    #     self.setTabsClosable(True)
-    #     mpos = event.pos()
-    #     idx = self.tabAt(mpos)
-    #     if idx != -1:
-    #         self.setTabsClosable(True)
-    #         self.tabButton(idx, QTabBar.LeftSide).resize(20, 20)
-    #     
-    #     event.ignore()
-    #     return
-
-    # def leaveEvent(self, event):
-    #     self.setTabsClosable(True)
-    #     mpos = event.pos()
-    #     idx = self.tabAt(mpos)
-    #     if idx != -1:
-    #         self.setTabsClosable(True)
-    #         self.tabButton(idx, QTabBar.LeftSide).resize(0, 0)
-
-
-    #     event.ignore()
-    #     return
-
-    # def mouseMoveEvent(self, event):
-    #     mpos = event.pos()
-    #     idx = self.tabAt(mpos)
-    #     if idx != -1:
-    #         # self.setTabButton(idx, QtGui.QtabBar.RightSide, None)
-    #         self.setTabsClosable(True)
-    #         self.tabButton(idx, QTabBar.LeftSide).resize(20, 20)
-
-    #     else:
-    #         self.setTabsClosable(False)
-    #         self.tabButton(self.currentIndex(), QTabBar.LeftSide).resize(0, 0)
-
-    #     event.ignore()
-    #     return
-
-    # def displayCloseButton(self):
-    #     if self.underMouse():
-    #         print("At index:", self.currentIndex(), ", the width is", self.width())
-    #         self.setTabButton(idx, QtGui.QtabBar.RightSide, None)
 
     def tabSizeHint(self, index):
         size = QTabBar.tabSizeHint(self, index)
@@ -97,6 +53,22 @@ class TabBar(QTabBar):
         if ok:
             newName = self.parent.get_valid_name(newName)
             self.setTabText(index, newName)
+
+class TabPlainTextEdit(QtWidgets.QTextEdit):
+    def __init__(self, parent):
+        super(TabPlainTextEdit, self).__init__(parent)
+        self.parent = parent
+        self.initUI()
+
+    def initUI(self):
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
+        self.setSizePolicy(sizePolicy)
+        self.setObjectName("textEdit")
+        # self.textChanged.connect(self.parent.parent.save_tab)
+        
 
 class NotesTabWidget(QtWidgets.QTabWidget):
     def __init__(self, parent):
@@ -166,24 +138,39 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         sizePolicy.setHeightForWidth(self.tab.sizePolicy().hasHeightForWidth())
         self.tab.setSizePolicy(sizePolicy)
         self.tab.setObjectName("tab")
+        self.tab.setAccessibleName("tab")
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.tab)
         self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
-        self.plainTextEdit = QtWidgets.QPlainTextEdit(self.tab)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.plainTextEdit.sizePolicy().hasHeightForWidth())
-        self.plainTextEdit.setSizePolicy(sizePolicy)
-        self.plainTextEdit.setObjectName("plainTextEdit")
-        self.plainTextEdit.textChanged.connect(self.save_tab)
-        self.horizontalLayout_7.addWidget(self.plainTextEdit)
+        
+        self.tab.plainTextEdit = TabPlainTextEdit(self.tab)
+        self.tab.plainTextEdit.textChanged.connect(self.save_tab)
+        self.horizontalLayout_7.addWidget(self.tab.plainTextEdit)
 
         label = self.get_valid_name(label)
         
         self.addTab(self.tab, label)
 
         self.setCurrentWidget(self.tab)
+	
+    def setItalic(self):
+        italic = self.currentWidget().plainTextEdit.fontItalic()
+        for i in range(self.count()):
+            if italic:
+                self.widget(i).plainTextEdit.setFontItalic(False)
+            else:
+                self.widget(i).plainTextEdit.setFontItalic(True)
+
+    def setBold(self):
+        # get current text edit font weight
+        weight = self.currentWidget().plainTextEdit.fontWeight()
+
+        # set weight for all tabs
+        for i in range(self.count()):
+            if weight == QtGui.QFont.Bold:
+                self.widget(i).plainTextEdit.setFontWeight(QtGui.QFont.Normal)
+            else:
+                self.widget(i).plainTextEdit.setFontWeight(QtGui.QFont.Bold)
 
     def close_tab(self, index):
         # will not close current tab if it's the only tab open
@@ -192,7 +179,7 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.removeTab(index)
 
     def save_tab(self):
-        note_text = self.plainTextEdit.toPlainText()
+        note_text = self.tab.plainTextEdit.toPlainText()
         # TODO: change this to {current directory}/saved_notes/{note_name}
         file_name = 'saved_notes/' + self.tabText(self.currentIndex())
         with open(file_name, 'w') as note:
@@ -272,9 +259,8 @@ class Ui_MainWindow(object):
         self.Notes.setSizePolicy(sizePolicy)
         self.tabWidget = NotesTabWidget(self.Notes)
         self.horizontalLayout_6.addWidget(self.tabWidget)
-        
-
         self.horizontalLayout_3.addWidget(self.Notes)
+        
         self.Tools = QtWidgets.QFrame(self.Notes_Tags)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -289,26 +275,33 @@ class Ui_MainWindow(object):
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        self.toolButton = QtWidgets.QToolButton(self.Tools)
+
+        self.italicButton = QtWidgets.QToolButton(self.Tools)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("resources/italics.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton.setIcon(icon)
-        self.toolButton.setObjectName("toolButton")
-        self.verticalLayout.addWidget(self.toolButton)
-        self.toolButton_2 = QtWidgets.QToolButton(self.Tools)
+        self.italicButton.setIcon(icon)
+        self.italicButton.setObjectName("italicButton")
+        self.verticalLayout.addWidget(self.italicButton)
+        self.italicButton.clicked.connect(self.tabWidget.setItalic)
+
+        self.boldButton = QtWidgets.QToolButton(self.Tools)
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("resources/bold.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_2.setIcon(icon1)
-        self.toolButton_2.setObjectName("toolButton_2")
-        self.verticalLayout.addWidget(self.toolButton_2)
-        self.toolButton_3 = QtWidgets.QToolButton(self.Tools)
+        self.boldButton.setIcon(icon1)
+        self.boldButton.setObjectName("boldButton")
+        self.verticalLayout.addWidget(self.boldButton)
+        self.boldButton.clicked.connect(self.tabWidget.setBold)
+
+        self.underlineButton = QtWidgets.QToolButton(self.Tools)
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("resources/underline.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.toolButton_3.setIcon(icon2)
-        self.toolButton_3.setObjectName("toolButton_3")
-        self.verticalLayout.addWidget(self.toolButton_3)
+        self.underlineButton.setIcon(icon2)
+        self.underlineButton.setObjectName("underlineButton")
+        self.verticalLayout.addWidget(self.underlineButton)
+
         self.horizontalLayout_9.addLayout(self.verticalLayout)
         self.horizontalLayout_3.addWidget(self.Tools, 0, QtCore.Qt.AlignTop)
+        
         self.Menu_Notes_Tags.addWidget(self.Notes_Tags)
         self.horizontalLayout_2.addLayout(self.Menu_Notes_Tags)
         self.horizontalLayout.addWidget(self.Box)
@@ -323,9 +316,9 @@ class Ui_MainWindow(object):
         self.menu_Notisimplifi = QtWidgets.QMenu(self.menubar)
         self.menu_Notisimplifi.setObjectName("menu_Notisimplifi")
         MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        # self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        # self.statusbar.setObjectName("statusbar")
+        # MainWindow.setStatusBar(self.statusbar)
         self.menubar.addAction(self.menu_Notisimplifi.menuAction())
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
@@ -335,12 +328,10 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton.setText(_translate("MainWindow", "Add"))
-        
-        self.toolButton.setText(_translate("MainWindow", "..."))
-        self.toolButton_2.setText(_translate("MainWindow", "..."))
-        self.toolButton_3.setText(_translate("MainWindow", "..."))
+        # self.toolButton.setText(_translate("MainWindow", "..."))
+        # self.toolButton_2.setText(_translate("MainWindow", "..."))
+        # self.toolButton_3.setText(_translate("MainWindow", "..."))
         self.menu_Notisimplifi.setTitle(_translate("MainWindow", "&Notisimplifi"))
-
         self.treeWidget.headerItem().setText(0, _translate("MainWindow", "Senior Courses"))
         #__sortingEnabled = self.treeWidget.isSortingEnabled()
         self.treeWidget.setSortingEnabled(False)
@@ -370,7 +361,7 @@ if __name__ == "__main__":
 
     # delay main form from showing until 2 seconds has passed
     loop = QEventLoop()
-    QTimer.singleShot(2000, loop.quit)
+    QTimer.singleShot(1000, loop.quit)
     loop.exec_()
 
     w = QtWidgets.QMainWindow()
