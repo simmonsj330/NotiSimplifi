@@ -54,7 +54,7 @@ class TabBar(QTabBar):
             newName = self.parent.get_valid_name(newName)
             self.setTabText(index, newName)
 
-class TabPlainTextEdit(QtWidgets.QPlainTextEdit):
+class TabPlainTextEdit(QtWidgets.QTextEdit):
     def __init__(self, parent):
         super(TabPlainTextEdit, self).__init__(parent)
         self.parent = parent
@@ -66,7 +66,7 @@ class TabPlainTextEdit(QtWidgets.QPlainTextEdit):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
-        self.setObjectName("plainTextEdit")
+        self.setObjectName("textEdit")
         # self.textChanged.connect(self.parent.parent.save_tab)
         
 
@@ -138,19 +138,31 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         sizePolicy.setHeightForWidth(self.tab.sizePolicy().hasHeightForWidth())
         self.tab.setSizePolicy(sizePolicy)
         self.tab.setObjectName("tab")
+        self.tab.setAccessibleName("tab")
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.tab)
         self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         
-        self.plainTextEdit = TabPlainTextEdit(self.tab)
-        self.plainTextEdit.textChanged.connect(self.save_tab)
-        self.horizontalLayout_7.addWidget(self.plainTextEdit)
+        self.tab.plainTextEdit = TabPlainTextEdit(self.tab)
+        self.tab.plainTextEdit.textChanged.connect(self.save_tab)
+        self.horizontalLayout_7.addWidget(self.tab.plainTextEdit)
 
         label = self.get_valid_name(label)
         
         self.addTab(self.tab, label)
 
         self.setCurrentWidget(self.tab)
+
+    def setBold(self):
+        # get current text edit font weight
+        weight = self.currentWidget().plainTextEdit.fontWeight()
+
+        # set weight for all tabs
+        for i in range(self.count()):
+            if weight == QtGui.QFont.Bold:
+                self.widget(i).plainTextEdit.setFontWeight(QtGui.QFont.Normal)
+            else:
+                self.widget(i).plainTextEdit.setFontWeight(QtGui.QFont.Bold)
 
     def close_tab(self, index):
         # will not close current tab if it's the only tab open
@@ -159,7 +171,7 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.removeTab(index)
 
     def save_tab(self):
-        note_text = self.plainTextEdit.toPlainText()
+        note_text = self.tab.plainTextEdit.toPlainText()
         # TODO: change this to {current directory}/saved_notes/{note_name}
         file_name = 'saved_notes/' + self.tabText(self.currentIndex())
         with open(file_name, 'w') as note:
@@ -269,6 +281,7 @@ class Ui_MainWindow(object):
         self.boldButton.setIcon(icon1)
         self.boldButton.setObjectName("boldButton")
         self.verticalLayout.addWidget(self.boldButton)
+        self.boldButton.clicked.connect(self.tabWidget.setBold)
 
         self.underlineButton = QtWidgets.QToolButton(self.Tools)
         icon2 = QtGui.QIcon()
