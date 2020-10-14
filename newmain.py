@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# Source code for NotiSimplifi
+# Authors: Team Ironman -- James, Terryl, and Ryan
+
 import sys
 import os
 import glob
@@ -13,10 +16,6 @@ class TabBar(QTabBar):
     def __init__(self, parent):
         super(TabBar, self).__init__()
         self.parent = parent;
-        # timer = QTimer(self)
-        # timer.timeout.connect(self.displayCloseButton)
-        # timer.start(100)
-        # self.setTabsClosable(False)
         self.setStyleSheet("""
             QTabBar::close-button { 
                 image: url(delete_tab.png); 
@@ -67,8 +66,6 @@ class TabPlainTextEdit(QtWidgets.QTextEdit):
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
         self.setObjectName("textEdit")
-        # self.textChanged.connect(self.parent.parent.save_tab)
-        
 
 class NotesTabWidget(QtWidgets.QTabWidget):
     def __init__(self, parent):
@@ -114,7 +111,6 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         num = 1 
         while True:
             label += '.txt'
-
             # This try catch is necessary because {list}.index() will return 
             # a ValueError if a match isn't found. If a ValueError is returned
             # then we know that a file name is valid and we can break out of 
@@ -142,17 +138,19 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.tab)
         self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
-        
         self.tab.plainTextEdit = TabPlainTextEdit(self.tab)
+
+        # Connecting save tab function to text changed property on text edit page
         self.tab.plainTextEdit.textChanged.connect(self.save_tab)
         self.horizontalLayout_7.addWidget(self.tab.plainTextEdit)
-
+       
+        # getting valid name (i.e. a name that is not being used in one of
+        # the open tabs or an already saved note
         label = self.get_valid_name(label)
-        
         self.addTab(self.tab, label)
-
         self.setCurrentWidget(self.tab)
-	
+
+    # toolbar functions that make the buttons work
     def setItalic(self):
         italic = self.currentWidget().plainTextEdit.fontItalic()
         for i in range(self.count()):
@@ -180,7 +178,6 @@ class NotesTabWidget(QtWidgets.QTabWidget):
             else:
                 self.widget(i).plainTextEdit.setFontUnderline(True)
 
-
     def close_tab(self, index):
         # will not close current tab if it's the only tab open
         if self.count() < 2:
@@ -193,7 +190,8 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         file_name = 'saved_notes/' + self.tabText(self.currentIndex())
         with open(file_name, 'w') as note:
             note.write(note_text)
-    
+
+# A good portion of this is designer code 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -226,6 +224,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
 
+        # Tree widget
         self.treeWidget = QtWidgets.QTreeWidget(self.Tags)
         self.treeWidget.setUniformRowHeights(False)
         self.treeWidget.setObjectName("treeWidget")
@@ -259,9 +258,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.Notes)
         self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
-
-
-        #Custom Written to fit within horizontal layout 6
+        
+        # custom tab widget
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -285,6 +283,7 @@ class Ui_MainWindow(object):
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
 
+        # toolbar bold, italic and underline buttons
         self.italicButton = QtWidgets.QToolButton(self.Tools)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("resources/italics.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -311,7 +310,6 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_9.addLayout(self.verticalLayout)
         self.horizontalLayout_3.addWidget(self.Tools, 0, QtCore.Qt.AlignTop)
-        
         self.Menu_Notes_Tags.addWidget(self.Notes_Tags)
         self.horizontalLayout_2.addLayout(self.Menu_Notes_Tags)
         self.horizontalLayout.addWidget(self.Box)
@@ -326,9 +324,6 @@ class Ui_MainWindow(object):
         self.menu_Notisimplifi = QtWidgets.QMenu(self.menubar)
         self.menu_Notisimplifi.setObjectName("menu_Notisimplifi")
         MainWindow.setMenuBar(self.menubar)
-        # self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        # self.statusbar.setObjectName("statusbar")
-        # MainWindow.setStatusBar(self.statusbar)
         self.menubar.addAction(self.menu_Notisimplifi.menuAction())
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
@@ -338,9 +333,6 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton.setText(_translate("MainWindow", "Add"))
-        # self.toolButton.setText(_translate("MainWindow", "..."))
-        # self.toolButton_2.setText(_translate("MainWindow", "..."))
-        # self.toolButton_3.setText(_translate("MainWindow", "..."))
         self.menu_Notisimplifi.setTitle(_translate("MainWindow", "&Notisimplifi"))
         self.treeWidget.headerItem().setText(0, _translate("MainWindow", "Senior Courses"))
         #__sortingEnabled = self.treeWidget.isSortingEnabled()
