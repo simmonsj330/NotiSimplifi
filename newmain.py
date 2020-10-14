@@ -321,15 +321,44 @@ class Ui_MainWindow(object):
         #Added this line to show menu bar in the app window
         self.menubar.setNativeMenuBar(False)      
 
+        #Initializing menu bar
         self.menubar.setGeometry(QtCore.QRect(0, 0, 747, 22))
         self.menubar.setObjectName("menubar")
         self.menu_Notisimplifi = QtWidgets.QMenu(self.menubar)
         self.menu_Notisimplifi.setObjectName("menu_Notisimplifi")
+        self.menu_File = QtWidgets.QMenu(self.menubar)
+        self.menu_File.setObjectName("menu_File")
         MainWindow.setMenuBar(self.menubar)
+
+        #Initializing menu bar 'Notisimplifi' drop down actions
+        self.actionAbout = QtWidgets.QAction(MainWindow)
+        self.actionAbout.setObjectName("actionAbout")
+        self.actionQuit = QtWidgets.QAction(MainWindow)
+        self.actionQuit.setObjectName("actionQuit")
+
+        #Initializing menu bar 'File' drop down actions
+        self.actionOpen = QtWidgets.QAction(MainWindow)
+        self.actionOpen.setObjectName("actionOpen")
+        self.actionSave = QtWidgets.QAction(MainWindow)
+        self.actionSave.setObjectName("actionSave")
+
+        #Setting layout and seperators of 'File' drop down actions
+        self.menu_Notisimplifi.addAction(self.actionAbout)
+        self.menu_Notisimplifi.addSeparator()
+        self.menu_Notisimplifi.addAction(self.actionQuit)
+
+        #Setting layout and seperators of 'File' drop down actions
+        self.menu_File.addAction(self.actionOpen)
+        self.menu_File.addSeparator()
+        self.menu_File.addAction(self.actionSave)
+
+        #Adding actions to menu actions that can take place
+        self.menubar.addAction(self.menu_Notisimplifi.menuAction())
+        self.menubar.addAction(self.menu_File.menuAction())
+        
         # self.statusbar = QtWidgets.QStatusBar(MainWindow)
         # self.statusbar.setObjectName("statusbar")
         # MainWindow.setStatusBar(self.statusbar)
-        self.menubar.addAction(self.menu_Notisimplifi.menuAction())
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -341,7 +370,14 @@ class Ui_MainWindow(object):
         # self.toolButton.setText(_translate("MainWindow", "..."))
         # self.toolButton_2.setText(_translate("MainWindow", "..."))
         # self.toolButton_3.setText(_translate("MainWindow", "..."))
+
         self.menu_Notisimplifi.setTitle(_translate("MainWindow", "&Notisimplifi"))
+        self.menu_File.setTitle(_translate("MainWindow", "&File"))
+        self.actionAbout.setText(_translate("MainWindow", "About"))
+        self.actionQuit.setText(_translate("MainWindow", "Quit"))
+        self.actionOpen.setText(_translate("MainWindow", "Open"))
+        self.actionSave.setText(_translate("MainWindow", "Save"))
+
         self.treeWidget.headerItem().setText(0, _translate("MainWindow", "Senior Courses"))
         #__sortingEnabled = self.treeWidget.isSortingEnabled()
         self.treeWidget.setSortingEnabled(False)
