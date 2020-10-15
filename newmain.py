@@ -9,6 +9,8 @@ import glob
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QPixmap, QPainter, QIcon
 from PyQt5.QtWidgets import QSplashScreen, QTabBar, QInputDialog, QAction
+# from PyQt5.QtWidgets import QSplashScreen, QTabBar, QInputDialog, QAction, QPushButton, QDialogButtonBox, QVBoxLayout, QLabel
+from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QEventLoop, QTimer, Qt, QSize, pyqtSlot
 from mainwindow import Ui_MainWindow
 
@@ -135,18 +137,24 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.tab.setSizePolicy(sizePolicy)
         self.tab.setObjectName("tab")
         self.tab.setAccessibleName("tab")
+        
+        # adding a "save state" to tab
+        # set to 'unsaved' as default
+        self.tab.saveState = False 
+
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.tab)
         self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.tab.plainTextEdit = TabPlainTextEdit(self.tab)
 
         # Connecting save tab function to text changed property on text edit page
-        self.tab.plainTextEdit.textChanged.connect(self.save_tab)
+        self.tab.plainTextEdit.textChanged.connect(self.autoSaveTab)
         self.horizontalLayout_7.addWidget(self.tab.plainTextEdit)
        
         # getting valid name (i.e. a name that is not being used in one of
         # the open tabs or an already saved note
-        label = self.get_valid_name(label)
+
+        # label = self.get_valid_name(label)
         self.addTab(self.tab, label)
         self.setCurrentWidget(self.tab)
 
@@ -184,12 +192,14 @@ class NotesTabWidget(QtWidgets.QTabWidget):
             return
         self.removeTab(index)
 
-    def save_tab(self):
-        note_text = self.tab.plainTextEdit.toPlainText()
-        # TODO: change this to {current directory}/saved_notes/{note_name}
-        file_name = 'saved_notes/' + self.tabText(self.currentIndex())
-        with open(file_name, 'w') as note:
-            note.write(note_text)
+    def autoSaveTab(self):
+        if self.tab.saveState:
+            note_text = self.tab.plainTextEdit.toPlainText()
+            # TODO: change this to {current directory}/saved_notes/{note_name}
+            file_name = 'saved_notes/' + self.tabText(self.currentIndex()) + '.txt'
+            with open(file_name, 'w') as note:
+                note.write(note_text)
+
 
 class ErrorDialog(QtWidgets.QDialog):
     def __init__(self, parent, message):
