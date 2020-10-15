@@ -8,7 +8,6 @@ import os
 import glob
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QPixmap, QPainter, QIcon
-from PyQt5.QtWidgets import QSplashScreen, QTabBar, QInputDialog, QAction
 # from PyQt5.QtWidgets import QSplashScreen, QTabBar, QInputDialog, QAction, QPushButton, QDialogButtonBox, QVBoxLayout, QLabel
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QEventLoop, QTimer, Qt, QSize, pyqtSlot
@@ -52,8 +51,11 @@ class TabBar(QTabBar):
         newName, ok = QInputDialog.getText(self, '','New file name:')
 
         if ok:
-            newName = self.parent.get_valid_name(newName)
-            self.setTabText(index, newName)
+            # TODO: Ryan: UNCOMMENT THIS
+            # newName = self.parent.get_valid_name(newName)
+            allowNameChange = self.parent.savedTabNameChange(newName)
+            if allowNameChange:
+                self.setTabText(index, newName)
 
 class TabPlainTextEdit(QtWidgets.QTextEdit):
     def __init__(self, parent):
@@ -200,6 +202,77 @@ class NotesTabWidget(QtWidgets.QTabWidget):
             with open(file_name, 'w') as note:
                 note.write(note_text)
 
+    def saveTab(self, name=" "):
+        # if note has not been saved previously
+        if not self.tab.saveState:
+            note_text = self.tab.plainTextEdit.toPlainText()
+
+            if not name:
+                tab_text = self.tabText(self.currentIndex())
+                file_name = 'saved_notes/' + tab_text  + '.txt'
+            else:
+                tab_text = name 
+                file_name = 'saved_notes/' + name + '.txt'
+
+            # TODO: change this to {current directory}/saved_notes/{note_name}
+            # this will present user with an error if a note name is already in use
+            if not self.validName(tab_text):
+                self.errorDialog = ErrorDialog(self, file_name)
+                if self.errorDialog.exec_():
+                    # close other matching tab if open
+                    current_tab_names = [self.tabBar().tabText(i) for i in range(self.count())]
+                    for i in range(self.count()):
+                        if (self.tabBar().tabText(i) == tab_text) and (i != self.currentIndex()):
+                            self.removeTab(i)
+
+                    os.remove(file_name)
+                    with open(file_name, 'w') as note:
+                        note.write(note_text)
+                    self.tab.saveState = True
+                    return True
+                else:
+                    return False
+            else:
+                if name:
+                    f_name = 'saved_notes/' + self.tabText(self.currentIndex()) + '.txt'
+                    os.remove(f_name)
+                with open(file_name, 'w') as note:
+                    note.write(note_text)
+                self.tab.saveState = True
+                return True
+
+    def savedTabNameChange(self, newName):
+        if self.tab.saveState == False:
+            return True
+
+        self.tab.saveState = False
+
+        if self.saveTab(newName):
+            self.tab.saveState = True
+            return True
+        else:
+            self.tab.saveState = True
+            return False
+
+    def validName(self, label):
+        # remove leading and trailing whitespace
+        label = label.strip() + '.txt'
+
+        # create list of all saved notes
+        # TODO: change this to check for duplicates in current directory specified by tree
+        # once tree has been implemented 
+        namesInUse = [os.path.basename(name) for name in glob.glob("saved_notes/*.txt")]
+
+        notInUse = False
+        # label += '.txt'
+        try:
+            temp = namesInUse.index(label)
+        except ValueError:
+            notInUse = True 
+
+        # print('in validName', notInUse)
+
+        return notInUse
 
 class ErrorDialog(QtWidgets.QDialog):
     def __init__(self, parent, message):
@@ -379,6 +452,9 @@ class Ui_MainWindow(object):
         self.actionOpen.setObjectName("actionOpen")
         self.actionSave = QtWidgets.QAction(MainWindow)
         self.actionSave.setObjectName("actionSave")
+        
+        # connecting action to current tab 
+        self.actionSave.triggered.connect(self.tabWidget.saveTab)
 
         #Setting layout and seperators of 'File' drop down actions
         self.menu_Notisimplifi.addAction(self.actionAbout)
