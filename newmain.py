@@ -191,6 +191,36 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         with open(file_name, 'w') as note:
             note.write(note_text)
 
+class ErrorDialog(QtWidgets.QDialog):
+    def __init__(self, parent, message):
+        super(ErrorDialog, self).__init__(parent)
+        self.parent = parent
+        self.text = message
+        self.initUI()
+
+    def initUI(self):
+        temp = "WARNING: '" + self.text + "' already exists!"
+        self.label = QLabel(temp)
+
+        rBtn = QPushButton("Replace")
+        cBtn = QPushButton("Cancel")
+        # sets cancel to default button (i.e. if user hits enter it clicks cancel)
+        cBtn.setDefault(True) 
+        
+        self.btnBox = QDialogButtonBox()
+        self.btnBox.setCenterButtons(True)
+
+        self.btnBox.addButton(rBtn, QDialogButtonBox.AcceptRole)
+        self.btnBox.addButton(cBtn, QDialogButtonBox.RejectRole)
+        
+        self.btnBox.accepted.connect(self.accept)
+        self.btnBox.rejected.connect(self.reject)
+
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.label)
+        self.layout.addWidget(self.btnBox)
+        self.setLayout(self.layout)
+
 # A good portion of this is designer code 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
