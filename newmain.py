@@ -8,7 +8,8 @@ import os
 import glob
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QPixmap, QPainter, QIcon
-from PyQt5.QtWidgets import QSplashScreen, QTabBar, QInputDialog, QAction
+# from PyQt5.QtWidgets import QSplashScreen, QTabBar, QInputDialog, QAction, QPushButton, QDialogButtonBox, QVBoxLayout, QLabel
+from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QEventLoop, QTimer, Qt, QSize, pyqtSlot
 from mainwindow import Ui_MainWindow
 
@@ -50,8 +51,11 @@ class TabBar(QTabBar):
         newName, ok = QInputDialog.getText(self, '','New file name:')
 
         if ok:
-            newName = self.parent.get_valid_name(newName)
-            self.setTabText(index, newName)
+            # TODO: Ryan: UNCOMMENT THIS
+            # newName = self.parent.get_valid_name(newName)
+            allowNameChange = self.parent.savedTabNameChange(newName)
+            if allowNameChange:
+                self.setTabText(index, newName)
 
 class TabPlainTextEdit(QtWidgets.QTextEdit):
     def __init__(self, parent):
@@ -135,18 +139,24 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.tab.setSizePolicy(sizePolicy)
         self.tab.setObjectName("tab")
         self.tab.setAccessibleName("tab")
+        
+        # adding a "save state" to tab
+        # set to 'unsaved' as default
+        self.tab.saveState = False 
+
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.tab)
         self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.tab.plainTextEdit = TabPlainTextEdit(self.tab)
 
         # Connecting save tab function to text changed property on text edit page
-        self.tab.plainTextEdit.textChanged.connect(self.save_tab)
+        self.tab.plainTextEdit.textChanged.connect(self.autoSaveTab)
         self.horizontalLayout_7.addWidget(self.tab.plainTextEdit)
        
         # getting valid name (i.e. a name that is not being used in one of
         # the open tabs or an already saved note
-        label = self.get_valid_name(label)
+
+        # label = self.get_valid_name(label)
         self.addTab(self.tab, label)
         self.setCurrentWidget(self.tab)
 
@@ -184,12 +194,115 @@ class NotesTabWidget(QtWidgets.QTabWidget):
             return
         self.removeTab(index)
 
-    def save_tab(self):
-        note_text = self.tab.plainTextEdit.toPlainText()
-        # TODO: change this to {current directory}/saved_notes/{note_name}
-        file_name = 'saved_notes/' + self.tabText(self.currentIndex())
-        with open(file_name, 'w') as note:
-            note.write(note_text)
+    def autoSaveTab(self):
+        if self.tab.saveState:
+            note_text = self.tab.plainTextEdit.toPlainText()
+            # TODO: change this to {current directory}/saved_notes/{note_name}
+            file_name = 'saved_notes/' + self.tabText(self.currentIndex()) + '.txt'
+            with open(file_name, 'w') as note:
+                note.write(note_text)
+
+    def saveTab(self, name=" "):
+        # if note has not been saved previously
+        if not self.tab.saveState:
+            note_text = self.tab.plainTextEdit.toPlainText()
+
+            if not name:
+                tab_text = self.tabText(self.currentIndex())
+                file_name = 'saved_notes/' + tab_text  + '.txt'
+            else:
+                tab_text = name 
+                file_name = 'saved_notes/' + name + '.txt'
+
+            # TODO: change this to {current directory}/saved_notes/{note_name}
+            # this will present user with an error if a note name is already in use
+            if not self.validName(tab_text):
+                self.errorDialog = ErrorDialog(self, file_name)
+                if self.errorDialog.exec_():
+                    # close other matching tab if open
+                    current_tab_names = [self.tabBar().tabText(i) for i in range(self.count())]
+                    for i in range(self.count()):
+                        if (self.tabBar().tabText(i) == tab_text) and (i != self.currentIndex()):
+                            self.removeTab(i)
+
+                    os.remove(file_name)
+                    with open(file_name, 'w') as note:
+                        note.write(note_text)
+                    self.tab.saveState = True
+                    return True
+                else:
+                    return False
+            else:
+                if name:
+                    f_name = 'saved_notes/' + self.tabText(self.currentIndex()) + '.txt'
+                    os.remove(f_name)
+                with open(file_name, 'w') as note:
+                    note.write(note_text)
+                self.tab.saveState = True
+                return True
+
+    def savedTabNameChange(self, newName):
+        if self.tab.saveState == False:
+            return True
+
+        self.tab.saveState = False
+
+        if self.saveTab(newName):
+            self.tab.saveState = True
+            return True
+        else:
+            self.tab.saveState = True
+            return False
+
+    def validName(self, label):
+        # remove leading and trailing whitespace
+        label = label.strip() + '.txt'
+
+        # create list of all saved notes
+        # TODO: change this to check for duplicates in current directory specified by tree
+        # once tree has been implemented 
+        namesInUse = [os.path.basename(name) for name in glob.glob("saved_notes/*.txt")]
+
+        notInUse = False
+        # label += '.txt'
+        try:
+            temp = namesInUse.index(label)
+        except ValueError:
+            notInUse = True 
+
+        # print('in validName', notInUse)
+
+        return notInUse
+
+class ErrorDialog(QtWidgets.QDialog):
+    def __init__(self, parent, message):
+        super(ErrorDialog, self).__init__(parent)
+        self.parent = parent
+        self.text = message
+        self.initUI()
+
+    def initUI(self):
+        temp = "WARNING: '" + self.text + "' already exists!"
+        self.label = QLabel(temp)
+
+        rBtn = QPushButton("Replace")
+        cBtn = QPushButton("Cancel")
+        # sets cancel to default button (i.e. if user hits enter it clicks cancel)
+        cBtn.setDefault(True) 
+        
+        self.btnBox = QDialogButtonBox()
+        self.btnBox.setCenterButtons(True)
+
+        self.btnBox.addButton(rBtn, QDialogButtonBox.AcceptRole)
+        self.btnBox.addButton(cBtn, QDialogButtonBox.RejectRole)
+        
+        self.btnBox.accepted.connect(self.accept)
+        self.btnBox.rejected.connect(self.reject)
+
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.label)
+        self.layout.addWidget(self.btnBox)
+        self.setLayout(self.layout)
 
 # A good portion of this is designer code 
 class Ui_MainWindow(object):
@@ -339,6 +452,9 @@ class Ui_MainWindow(object):
         self.actionOpen.setObjectName("actionOpen")
         self.actionSave = QtWidgets.QAction(MainWindow)
         self.actionSave.setObjectName("actionSave")
+        
+        # connecting action to current tab 
+        self.actionSave.triggered.connect(self.tabWidget.saveTab)
 
         #Setting layout and seperators of 'File' drop down actions
         self.menu_Notisimplifi.addAction(self.actionAbout)
