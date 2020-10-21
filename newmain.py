@@ -12,16 +12,10 @@ from PyQt5.QtCore import QEventLoop, QTimer, Qt, QSize
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import *
 
-
 class TabBar(QTabBar):
     def __init__(self, parent):
         super(TabBar, self).__init__()
         self.parent = parent
-        self.setAutoFillBackground(True)
-
-        # QTabBar::tab::first { 
-        #     border-top-left-radius: 8px;
-        #     }
         self.setStyleSheet("""
             QTabBar::close-button { 
                 image: url(delete_tab.png); 
@@ -73,7 +67,8 @@ class TabPlainTextEdit(QtWidgets.QTextEdit):
         self.initUI()
 
     def initUI(self):
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
@@ -95,7 +90,8 @@ class NotesTabWidget(QtWidgets.QTabWidget):
 
         self.tab = TabBar(self)
         self.setTabBar(self.tab)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
@@ -145,7 +141,6 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         # create list of all current file names
         current_tab_names = [self.tabBar().tabText(i) for i in range(self.count())]
         saved_file_names = [os.path.basename(name) for name in glob.glob("saved_notes/*.txt")]
-
         # combines the two lists above into a single list of unique values
         used_names = list(set(current_tab_names + saved_file_names))
 
@@ -154,9 +149,9 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         num = 1
         while True:
             label += '.txt'
-            # This try catch is necessary because {list}.index() will return 
+            # This try catch is necessary because {list}.index() will return
             # a ValueError if a match isn't found. If a ValueError is returned
-            # then we know that a file name is valid and we can break out of 
+            # then we know that a file name is valid and we can break out of
             # the loop.
             try:
                 temp = used_names.index(label)
@@ -172,15 +167,14 @@ class NotesTabWidget(QtWidgets.QTabWidget):
     def add_new_tab(self, label="untitled"):
         # self.setUpdatesEnabled(False)
         self.tab = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tab.sizePolicy().hasHeightForWidth())
         self.tab.setSizePolicy(sizePolicy)
         self.tab.setObjectName("tab")
         self.tab.setAccessibleName("tab")
-
-        # self.tab.setStyleSheet("background: #282f39;")
 
         # adding a "save state" to tab
         # set to 'unsaved' as default
@@ -241,7 +235,8 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         if self.tab.saveState:
             note_text = self.tab.plainTextEdit.toPlainText()
             # TODO: change this to {current directory}/saved_notes/{note_name}
-            file_name = 'saved_notes/' + self.tabText(self.currentIndex()) + '.txt'
+            file_name = 'saved_notes/' + \
+                self.tabText(self.currentIndex()) + '.txt'
             with open(file_name, 'w') as note:
                 note.write(note_text)
 
@@ -263,7 +258,8 @@ class NotesTabWidget(QtWidgets.QTabWidget):
                 self.errorDialog = ErrorDialog(self, file_name)
                 if self.errorDialog.exec_():
                     # close other matching tab if open
-                    current_tab_names = [self.tabBar().tabText(i) for i in range(self.count())]
+                    current_tab_names = [self.tabBar().tabText(i)
+                                         for i in range(self.count())]
                     for i in range(self.count()):
                         if (self.tabBar().tabText(i) == tab_text) and (i != self.currentIndex()):
                             self.removeTab(i)
@@ -277,7 +273,8 @@ class NotesTabWidget(QtWidgets.QTabWidget):
                     return False
             else:
                 if name:
-                    f_name = 'saved_notes/' + self.tabText(self.currentIndex()) + '.txt'
+                    f_name = 'saved_notes/' + \
+                        self.tabText(self.currentIndex()) + '.txt'
                     os.remove(f_name)
                 with open(file_name, 'w') as note:
                     note.write(note_text)
@@ -303,8 +300,9 @@ class NotesTabWidget(QtWidgets.QTabWidget):
 
         # create list of all saved notes
         # TODO: change this to check for duplicates in current directory specified by tree
-        # once tree has been implemented 
-        namesInUse = [os.path.basename(name) for name in glob.glob("saved_notes/*.txt")]
+        # once tree has been implemented
+        namesInUse = [os.path.basename(name)
+                      for name in glob.glob("saved_notes/*.txt")]
 
         notInUse = False
         # label += '.txt'
@@ -347,7 +345,6 @@ class ErrorDialog(QtWidgets.QDialog):
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.btnBox)
         self.setLayout(self.layout)
-
 
 # A good portion of this is designer code
 class Ui_MainWindow(object):
@@ -431,7 +428,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
 
         # custom tab widget
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         self.Notes.setSizePolicy(sizePolicy)
@@ -448,10 +446,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addWidget(self.Notes)
 
         self.Tools = QtWidgets.QFrame(self.Notes_Tags)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.Tools.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.Tools.sizePolicy().hasHeightForWidth())
         self.Tools.setSizePolicy(sizePolicy)
         self.Tools.setMaximumSize(QtCore.QSize(25, 120))
         self.Tools.setLayoutDirection(QtCore.Qt.LeftToRight)
@@ -465,7 +465,8 @@ class Ui_MainWindow(object):
         # toolbar bold, italic and underline buttons
         self.italicButton = QtWidgets.QToolButton(self.Tools)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("resources/italics.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("resources/italics.ico"),
+                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.italicButton.setIcon(icon)
         self.italicButton.setObjectName("italicButton")
         self.verticalLayout.addWidget(self.italicButton)
@@ -473,7 +474,8 @@ class Ui_MainWindow(object):
 
         self.boldButton = QtWidgets.QToolButton(self.Tools)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("resources/bold.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("resources/bold.ico"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.boldButton.setIcon(icon1)
         self.boldButton.setObjectName("boldButton")
         self.verticalLayout.addWidget(self.boldButton)
@@ -481,7 +483,8 @@ class Ui_MainWindow(object):
 
         self.underlineButton = QtWidgets.QToolButton(self.Tools)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("resources/underline.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("resources/underline.ico"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.underlineButton.setIcon(icon2)
         self.underlineButton.setObjectName("underlineButton")
         self.verticalLayout.addWidget(self.underlineButton)
@@ -499,7 +502,7 @@ class Ui_MainWindow(object):
         self.menubar.setNativeMenuBar(False)
 
         # Initializing menu bar
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 747, 11))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 747, 22))
         self.menubar.setObjectName("menubar")
 
         self.menubar.setStyleSheet("""
@@ -513,6 +516,10 @@ class Ui_MainWindow(object):
         self.menu_File.setObjectName("menu_File")
         MainWindow.setMenuBar(self.menubar)
 
+        # Initialize add button functionality
+        self.actionAdd = QtWidgets.QAction(MainWindow)
+        self.actionAdd.setObjectName("actionAdd")
+    
         # Initializing menu bar 'Notisimplifi' drop down actions
         self.actionAbout = QtWidgets.QAction(MainWindow)
         self.actionAbout.setObjectName("actionAbout")
@@ -533,7 +540,7 @@ class Ui_MainWindow(object):
         self.menu_Notisimplifi.addSeparator()
         self.menu_Notisimplifi.addAction(self.actionQuit)
 
-        # Setting layout and separators of 'File' drop down actions
+        # Setting layout and seperators of 'File' drop down actions
         self.menu_File.addAction(self.actionOpen)
         self.menu_File.addSeparator()
         self.menu_File.addAction(self.actionSave)
@@ -555,13 +562,15 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.pushButton.setText(_translate("MainWindow", "Add"))
+        #self.pushButton.setText(_translate("MainWindow", "Add"))
+        self.actionAdd.setText(_translate("MainWindow", "Add"))
 
         # self.toolButton.setText(_translate("MainWindow", "..."))
         # self.toolButton_2.setText(_translate("MainWindow", "..."))
         # self.toolButton_3.setText(_translate("MainWindow", "..."))
 
-        self.menu_Notisimplifi.setTitle(_translate("MainWindow", "&Notisimplifi"))
+        self.menu_Notisimplifi.setTitle(
+            _translate("MainWindow", "&Notisimplifi"))
         self.menu_File.setTitle(_translate("MainWindow", "&File"))
         self.actionAbout.setText(_translate("MainWindow", "About"))
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
@@ -579,7 +588,6 @@ class Ui_MainWindow(object):
         self.treeWidget.topLevelItem(1).child(0).setText(0, _translate("MainWindow", "Project Iterations"))
         self.treeWidget.topLevelItem(1).child(1).setText(0, _translate("MainWindow", "Process"))
         self.treeWidget.topLevelItem(1).child(2).setText(0, _translate("MainWindow", "Usability"))
-
 
 # executes program
 if __name__ == "__main__":
