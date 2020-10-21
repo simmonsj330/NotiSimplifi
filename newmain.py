@@ -20,12 +20,24 @@ class TabBar(QTabBar):
             QTabBar::close-button { 
                 image: url(delete_tab.png); 
                 subcontrol-position: left; 
-                }
+            }
             QTabBar::tab { 
                 color: black;
                 background: #77dd77; 
-                border-right: 1px solid black;
-                }
+                border-left: 1px solid black;
+            }
+            QTabBar::tab::first {
+                border-left: none;
+            }
+            QTabBar::tab::only-one {
+                border-left: none;
+            }
+            QTabBar::tab::hover {
+                background: #8be28b;
+            }
+            QTabBar::tab::selected {
+                background: #b4ecb4;
+            }
             """)
 
     def tabSizeHint(self, index):
