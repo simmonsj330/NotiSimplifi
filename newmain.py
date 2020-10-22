@@ -398,6 +398,7 @@ class Ui_MainWindow(object):
 
         # Tree widget
         self.treeWidget = QtWidgets.QTreeWidget(self.Tags)
+        self.treeWidget.setGeometry(QtCore.QRect(0, 0, 201, 481))
         self.treeWidget.setUniformRowHeights(False)
         self.treeWidget.setObjectName("treeWidget")
 
@@ -414,22 +415,23 @@ class Ui_MainWindow(object):
         self.widget = QtWidgets.QWidget(self.Tags)
         self.widget.setObjectName("widget")
         self.verticalLayout_2.addWidget(self.widget)
-        self.widget_2 = QtWidgets.QWidget(self.Tags)
-        self.widget_2.setMaximumSize(QtCore.QSize(16777215, 50))
-        self.widget_2.setObjectName("widget_2")
-        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.widget_2)
-        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.pushButton = QtWidgets.QPushButton(self.widget_2)
-        self.pushButton.setMaximumSize(QtCore.QSize(60, 16777215))
-        self.pushButton.setObjectName("pushButton")
+        
+        #self.widget_2 = QtWidgets.QWidget(self.Tags)
+        #self.widget_2.setMaximumSize(QtCore.QSize(16777215, 60))
+        #self.widget_2.setObjectName("widget_2")
+        #self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.widget_2)
+        #self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        #self.pushButton = QtWidgets.QPushButton(self.widget_2)
+        #self.pushButton.setMaximumSize(QtCore.QSize(60, 16777215))
+        #self.pushButton.setObjectName("pushButton")
+        #self.horizontalLayout_4.addWidget(self.pushButton)
+        #self.verticalLayout_2.addWidget(self.widget_2)
 
         self.Tags.setStyleSheet("""
             background-color: #282f39;
             color: white;
         """)
 
-        self.horizontalLayout_4.addWidget(self.pushButton)
-        self.verticalLayout_2.addWidget(self.widget_2)
         self.verticalLayout_3.addLayout(self.verticalLayout_2)
         self.horizontalLayout_3.addWidget(self.Tags)
         self.Notes = QtWidgets.QFrame(self.Notes_Tags)
@@ -509,9 +511,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.Box)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
+        #self.addMenubar = self.menubar.addMenu('&Add')
 
-        # Added this line to show menu bar in the app window
-        self.menubar.setNativeMenuBar(False)
+        #Added this line to show menu bar in the app window
+        self.menubar.setNativeMenuBar(False)     
+        #addMenu.setNativeMenuBar(False) 
 
         # Initializing menu bar
         self.menubar.setGeometry(QtCore.QRect(0, 0, 747, 22))
@@ -526,7 +530,22 @@ class Ui_MainWindow(object):
         self.menu_Notisimplifi.setObjectName("menu_Notisimplifi")
         self.menu_File = QtWidgets.QMenu(self.menubar)
         self.menu_File.setObjectName("menu_File")
-        MainWindow.setMenuBar(self.menubar)
+        self.menu_Add = QtWidgets.QMenu(self.menubar)
+        self.menu_Add.setObjectName("menu_Add")
+        #MainWindow.setMenuBar(self.menubar)
+
+        #initalize section for add button
+        #addMenu.setGeometry(QtCore.QRect(500, 0, 200, 50))
+        '''self.addMenubar.setObjectName("addmenu")
+        self.add_button = QtWidgets.QMenu(self.addMenubar)
+        self.add_button.setObjectName("add_button")'''
+        #MainWindow.setMenuBar(addMenu)
+
+        #Initializing menubar 'Add' drop down actions
+        self.addFolder = QtWidgets.QAction(MainWindow)
+        self.addFolder.setObjectName("addFolder")
+        self.addFile = QtWidgets.QAction(MainWindow)
+        self.addFile.setObjectName("addFile")
 
         # Initialize add button functionality
         self.actionAdd = QtWidgets.QAction(MainWindow)
@@ -557,9 +576,14 @@ class Ui_MainWindow(object):
         self.menu_File.addSeparator()
         self.menu_File.addAction(self.actionSave)
 
-        # Adding actions to menu actions that can take place
+        self.menu_Add.addAction(self.addFolder)
+        self.menu_Add.addSeparator()
+        self.menu_Add.addAction(self.addFile)
+
+        #Adding actions to menu actions that can take place
         self.menubar.addAction(self.menu_Notisimplifi.menuAction())
         self.menubar.addAction(self.menu_File.menuAction())
+        self.menubar.addAction(self.menu_Add.menuAction())
 
         # self.statusbar = QtWidgets.QStatusBar(MainWindow)
         # self.statusbar.setObjectName("statusbar")
@@ -575,7 +599,6 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         #self.pushButton.setText(_translate("MainWindow", "Add"))
-        self.actionAdd.setText(_translate("MainWindow", "Add"))
 
         # self.toolButton.setText(_translate("MainWindow", "..."))
         # self.toolButton_2.setText(_translate("MainWindow", "..."))
@@ -584,6 +607,9 @@ class Ui_MainWindow(object):
         self.menu_Notisimplifi.setTitle(
             _translate("MainWindow", "&Notisimplifi"))
         self.menu_File.setTitle(_translate("MainWindow", "&File"))
+        self.menu_Add.setTitle(_translate("MainWindow", "&Add"))
+        self.addFolder.setText(_translate("MainWindow", "Folder"))
+        self.addFile.setText(_translate("MainWindow", "Notes File"))
         self.actionAbout.setText(_translate("MainWindow", "About"))
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
         self.actionOpen.setText(_translate("MainWindow", "Open"))
