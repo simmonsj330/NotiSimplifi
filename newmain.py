@@ -353,6 +353,10 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         return notInUse
 
 
+    def menubar_newtab(self):
+        self.add_new_tab()
+
+
 class ErrorDialog(QtWidgets.QDialog):
     def __init__(self, parent, message):
         super(ErrorDialog, self).__init__(parent)
@@ -539,6 +543,8 @@ class Ui_MainWindow(object):
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         # self.addMenubar = self.menubar.addMenu('&Add')
 
+        
+
         # Added this line to show menu bar in the app window
         self.menubar.setNativeMenuBar(False)     
         # addMenu.setNativeMenuBar(False) 
@@ -597,10 +603,14 @@ class Ui_MainWindow(object):
         self.actionQuit.setObjectName("actionQuit")
 
         #Open and Save
+        self.actionNewtab = QtWidgets.QAction(MainWindow)
+        self.actionNewtab.setObjectName("actionOpen")
         self.actionOpen = QtWidgets.QAction(MainWindow)
         self.actionOpen.setObjectName("actionOpen")
         self.actionSave = QtWidgets.QAction(MainWindow)
         self.actionSave.setObjectName("actionSave")
+        self.actionSaveas = QtWidgets.QAction(MainWindow)
+        self.actionSaveas.setObjectName("actionSaveas")
 
         #Undo and Copy
         self.actionUndo = QtWidgets.QAction(MainWindow)
@@ -618,8 +628,9 @@ class Ui_MainWindow(object):
 
         # connecting action to current tab 
         self.actionSave.triggered.connect(self.tabWidget.saveTab)
-        
         self.actionOpen.triggered.connect(self.tabWidget.openTab)
+        self.actionNewtab.triggered.connect(self.tabWidget.menubar_newtab)
+
 
         # Setting layout and separators of 'File' drop down actions
         self.menu_Notisimplifi.addAction(self.actionAbout)
@@ -627,9 +638,12 @@ class Ui_MainWindow(object):
         self.menu_Notisimplifi.addAction(self.actionQuit)
 
         # Setting layout and seperators of 'File' drop down actions
+        self.menu_File.addAction(self.actionNewtab)
+        self.menu_File.addSeparator()
         self.menu_File.addAction(self.actionOpen)
         self.menu_File.addSeparator()
         self.menu_File.addAction(self.actionSave)
+        self.menu_File.addAction(self.actionSaveas)
         # self.menu_File.addSeparator()
         # self.menu_File.addAction()
 
@@ -677,8 +691,10 @@ class Ui_MainWindow(object):
         self.addFile.setText(_translate("MainWindow", "Notes File"))
         self.actionAbout.setText(_translate("MainWindow", "About"))
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
+        self.actionNewtab.setText(_translate("MainWindow", "New Tab"))
         self.actionOpen.setText(_translate("MainWindow", "Open"))
         self.actionSave.setText(_translate("MainWindow", "Save"))
+        self.actionSaveas.setText(_translate("MainWindow", "Save As..."))
         self.actionUndo.setText(_translate("MainWindow", "Undo"))
         self.actionCopy.setText(_translate("MainWindow", "Copy"))
         self.actionPaste.setText(_translate("MainWindow", "Paste"))
