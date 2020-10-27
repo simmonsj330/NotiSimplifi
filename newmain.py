@@ -295,24 +295,28 @@ class NotesTabWidget(QtWidgets.QTabWidget):
                 self.tab.saveState = True
                 return True
 
-    '''def editor(self):
-        self.textEdit = QtWidgets.QTextEdit()
-        QtWidgets.QMainWindow.setCentralWidget(self.textEdit)'''
-
     # code from https://pythonprogramming.net/open-files-pyqt-tutorial/
     def openTab(self):
         name, _filter = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File')
         file = open(name,'r')
 
-        #self.editor()
+        # strip path and file extension from file name
+        name = os.path.splitext(os.path.basename(name))[0]
 
+        # create new tab for file
+        # TODO: add check here to see if any tabs are open, if none are, use the initial tab
+        self.add_new_tab()
+
+        # write the files text to the new tab's textedit and setting
+        # the tab name to the file's name
         with file:
             text = file.read()
-            print(name, text)
-            instance = TabPlainTextEdit(self)
-            instance.setPlaceholderText(text)
-            #text_edit = QtWidgets.QTextEdit()
-            #self.text_edit.setText(text)
+            self.tabBar().setTabText(self.currentIndex(), name)
+            self.currentWidget().plainTextEdit.setText(text)
+
+        # since it is already a saved note, we are setting it's
+        # saveState to True to turn on "auto save"
+        self.currentWidget().saveState = True
 
     def savedTabNameChange(self, newName):
         if self.tab.saveState == False:
