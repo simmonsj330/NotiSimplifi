@@ -20,7 +20,7 @@ class TabBar(QTabBar):
         self.setAutoFillBackground(True)
         self.setStyleSheet("""
             QTabBar::close-button {
-                image: url(delete_tab.png);
+                image: url(./resources/delete_tab.png);
                 subcontrol-position: left;
             }
             QTabBar::tab {
