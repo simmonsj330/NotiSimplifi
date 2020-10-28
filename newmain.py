@@ -348,6 +348,10 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         return notInUse
 
 
+    def menubar_newtab(self):
+        self.add_new_tab()
+
+
 class ErrorDialog(QtWidgets.QDialog):
     def __init__(self, parent, message):
         super(ErrorDialog, self).__init__(parent)
@@ -481,6 +485,8 @@ class Ui_MainWindow(object):
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         # self.addMenubar = self.menubar.addMenu('&Add')
 
+        
+
         # Added this line to show menu bar in the app window
         self.menubar.setNativeMenuBar(False)     
         # addMenu.setNativeMenuBar(False) 
@@ -494,10 +500,17 @@ class Ui_MainWindow(object):
             color: white;
         """)
 
+        #Initializing menu objects
+        #Notisimplifi
         self.menu_Notisimplifi = QtWidgets.QMenu(self.menubar)
         self.menu_Notisimplifi.setObjectName("menu_Notisimplifi")
+        #File
         self.menu_File = QtWidgets.QMenu(self.menubar)
         self.menu_File.setObjectName("menu_File")
+        #Edit
+        self.menu_Edit = QtWidgets.QMenu(self.menubar)
+        self.menu_Edit.setObjectName("menu_Edit")
+        #Add
         self.menu_Add = QtWidgets.QMenu(self.menubar)
         self.menu_Add.setObjectName("menu_Add")
         MainWindow.setMenuBar(self.menubar)
@@ -509,27 +522,46 @@ class Ui_MainWindow(object):
         self.add_button.setObjectName("add_button")'''
         # MainWindow.setMenuBar(addMenu)
 
-        # Initializing menubar 'Add' drop down actions
+        '''
+        Initializing menubar action objects
+        They are grouped together by what menubar section they are under
+        '''
+        #Add Folder and Add File
         self.addFolder = QtWidgets.QAction(MainWindow)
         self.addFolder.setObjectName("addFolder")
         self.addFile = QtWidgets.QAction(MainWindow)
         self.addFile.setObjectName("addFile")
 
+
+        #TODO wtf is this section here for?
         # Initialize add button functionality
         self.actionAdd = QtWidgets.QAction(MainWindow)
         self.actionAdd.setObjectName("actionAdd")
     
-        # Initializing menu bar 'Notisimplifi' drop down actions
+        #About and Quit
         self.actionAbout = QtWidgets.QAction(MainWindow)
         self.actionAbout.setObjectName("actionAbout")
         self.actionQuit = QtWidgets.QAction(MainWindow)
         self.actionQuit.setObjectName("actionQuit")
 
-        # Initializing menu bar 'File' drop down actions
+        #Open and Save
+        self.actionNewtab = QtWidgets.QAction(MainWindow)
+        self.actionNewtab.setObjectName("actionOpen")
         self.actionOpen = QtWidgets.QAction(MainWindow)
         self.actionOpen.setObjectName("actionOpen")
         self.actionSave = QtWidgets.QAction(MainWindow)
         self.actionSave.setObjectName("actionSave")
+        self.actionSaveas = QtWidgets.QAction(MainWindow)
+        self.actionSaveas.setObjectName("actionSaveas")
+
+        #Undo and Copy
+        self.actionUndo = QtWidgets.QAction(MainWindow)
+        self.actionUndo.setObjectName("actionUndo")
+        self.actionCopy = QtWidgets.QAction(MainWindow)
+        self.actionCopy.setObjectName("actionCopy")
+        self.actionPaste = QtWidgets.QAction(MainWindow)
+        self.actionPaste.setObjectName("actionPaste")
+        
 
         '''openFile = QtWidgets.QAction(MainWindow)
         openFile.setShortcut("Ctrl+O")
@@ -538,8 +570,9 @@ class Ui_MainWindow(object):
 
         # connecting action to current tab 
         self.actionSave.triggered.connect(self.tabWidget.saveTab)
-        
         self.actionOpen.triggered.connect(self.tabWidget.openTab)
+        self.actionNewtab.triggered.connect(self.tabWidget.menubar_newtab)
+
 
         # Setting layout and separators of 'File' drop down actions
         self.menu_Notisimplifi.addAction(self.actionAbout)
@@ -547,12 +580,22 @@ class Ui_MainWindow(object):
         self.menu_Notisimplifi.addAction(self.actionQuit)
 
         # Setting layout and seperators of 'File' drop down actions
+        self.menu_File.addAction(self.actionNewtab)
+        self.menu_File.addSeparator()
         self.menu_File.addAction(self.actionOpen)
         self.menu_File.addSeparator()
         self.menu_File.addAction(self.actionSave)
+        self.menu_File.addAction(self.actionSaveas)
         # self.menu_File.addSeparator()
         # self.menu_File.addAction()
 
+        # Setting layout and separators of 'Edit' drop down actions
+        self.menu_Edit.addAction(self.actionUndo)
+        self.menu_Edit.addSeparator()
+        self.menu_Edit.addAction(self.actionCopy)
+        self.menu_Edit.addAction(self.actionPaste)
+
+        #Setting layout and seperators of 'Add' drop down actions
         self.menu_Add.addAction(self.addFolder)
         self.menu_Add.addSeparator()
         self.menu_Add.addAction(self.addFile)
@@ -560,6 +603,7 @@ class Ui_MainWindow(object):
         # Adding actions to menu actions that can take place
         self.menubar.addAction(self.menu_Notisimplifi.menuAction())
         self.menubar.addAction(self.menu_File.menuAction())
+        self.menubar.addAction(self.menu_Edit.menuAction())
         self.menubar.addAction(self.menu_Add.menuAction())
         self.menubar.addAction(self.menu_Notisimplifi.menuAction())
        
@@ -651,16 +695,22 @@ class Ui_MainWindow(object):
         # self.toolButton_2.setText(_translate("MainWindow", "..."))
         # self.toolButton_3.setText(_translate("MainWindow", "..."))
 
-        self.menu_Notisimplifi.setTitle(
-            _translate("MainWindow", "&Notisimplifi"))
+        self.menu_Notisimplifi.setTitle(_translate("MainWindow", "&Notisimplifi"))
         self.menu_File.setTitle(_translate("MainWindow", "&File"))
+        self.menu_Edit.setTitle(_translate("MainWindow", "&Edit"))
         self.menu_Add.setTitle(_translate("MainWindow", "&Add"))
         self.addFolder.setText(_translate("MainWindow", "Folder"))
         self.addFile.setText(_translate("MainWindow", "Notes File"))
         self.actionAbout.setText(_translate("MainWindow", "About"))
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
+        self.actionNewtab.setText(_translate("MainWindow", "New Tab"))
         self.actionOpen.setText(_translate("MainWindow", "Open"))
         self.actionSave.setText(_translate("MainWindow", "Save"))
+        self.actionSaveas.setText(_translate("MainWindow", "Save As..."))
+        self.actionUndo.setText(_translate("MainWindow", "Undo"))
+        self.actionCopy.setText(_translate("MainWindow", "Copy"))
+        self.actionPaste.setText(_translate("MainWindow", "Paste"))
+        
 
         self.treeWidget.headerItem().setText(0, _translate("MainWindow", "Senior Courses"))
         # __sortingEnabled = self.treeWidget.isSortingEnabled()
