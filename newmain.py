@@ -605,7 +605,6 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_File.menuAction())
         self.menubar.addAction(self.menu_Edit.menuAction())
         self.menubar.addAction(self.menu_Add.menuAction())
-        self.menubar.addAction(self.menu_Notisimplifi.menuAction())
        
         #####################################################################
         self.tb2 = QtWidgets.QToolBar(MainWindow)
