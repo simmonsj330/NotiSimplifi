@@ -17,6 +17,7 @@ class TabBar(QTabBar):
     def __init__(self, parent):
         super(TabBar, self).__init__()
         self.parent = parent
+        self.setAutoFillBackground(True)
         self.setStyleSheet("""
             QTabBar::close-button {
                 image: url(delete_tab.png);
@@ -26,6 +27,7 @@ class TabBar(QTabBar):
                 color: black;
                 background: #77dd77;
                 border-left: 1px solid black;
+                text-align: center;
             }
             QTabBar::tab::first {
                 border-left: none;
@@ -37,6 +39,7 @@ class TabBar(QTabBar):
                 background: #8be28b;
             }
             QTabBar::tab::selected {
+                font: bold;
                 background: #b4ecb4;
             }
             """)
@@ -135,14 +138,6 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.setDocumentMode(True)
         self.tabCloseRequested.connect(self.close_tab)
         self.add_new_tab()
-        # self.setStyleSheet("""
-        #     QTabWidget::pane {
-        #         background-color: #171e24;
-        #     }
-        #     QTabWidget::tab-bar {
-        #         background: #171e24;
-        #     }
-        # """)
 
     # this prevents duplicate file names so that way we don't overwrite
     # any existing note files
@@ -395,6 +390,9 @@ class Ui_MainWindow(object):
         """)
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
+
+        self.centralwidget.setAutoFillBackground(True)
+
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -403,27 +401,30 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.Box)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.Menu_Notes_Tags = QtWidgets.QVBoxLayout()
+
         self.Menu_Notes_Tags.setObjectName("Menu_Notes_Tags")
         self.Notes_Tags = QtWidgets.QWidget(self.Box)
         self.Notes_Tags.setObjectName("Notes_Tags")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.Notes_Tags)
-        self.horizontalLayout_3.setContentsMargins(-1, -1, 0, -1)
+        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
+        # self.horizontalLayout_3.setContentsMargins(-1, -1, 0, -1)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+
         self.Tags = QtWidgets.QFrame(self.Notes_Tags)
         self.Tags.setMaximumSize(QtCore.QSize(200, 16777215))
-        self.Tags.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.Tags.setFrameShadow(QtWidgets.QFrame.Raised)
+        # self.Tags.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.Tags.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.Tags.setFrameShadow(QtWidgets.QFrame.Plain)
         self.Tags.setObjectName("Tags")
+
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.Tags)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_2.setSpacing(0)
-        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.verticalLayout_3.setSpacing(0)
 
         # Tree widget
         self.treeWidget = QtWidgets.QTreeWidget(self.Tags)
-        self.treeWidget.setGeometry(QtCore.QRect(0, 0, 201, 481))
+        # self.treeWidget.setGeometry(QtCore.QRect(0, 0, 201, 481))
         self.treeWidget.setUniformRowHeights(False)
         self.treeWidget.setObjectName("treeWidget")
 
@@ -435,31 +436,17 @@ class Ui_MainWindow(object):
         item_1 = QtWidgets.QTreeWidgetItem(item_0)
         item_1 = QtWidgets.QTreeWidgetItem(item_0)
         item_1 = QtWidgets.QTreeWidgetItem(item_0)
-        self.verticalLayout_2.addWidget(self.treeWidget)
-
-        self.widget = QtWidgets.QWidget(self.Tags)
-        self.widget.setObjectName("widget")
-        self.verticalLayout_2.addWidget(self.widget)
-        
-        # self.widget_2 = QtWidgets.QWidget(self.Tags)
-        # self.widget_2.setMaximumSize(QtCore.QSize(16777215, 60))
-        # self.widget_2.setObjectName("widget_2")
-        # self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.widget_2)
-        # self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        # self.pushButton = QtWidgets.QPushButton(self.widget_2)
-        # self.pushButton.setMaximumSize(QtCore.QSize(60, 16777215))
-        # self.pushButton.setObjectName("pushButton")
-        # self.horizontalLayout_4.addWidget(self.pushButton)
-        # self.verticalLayout_2.addWidget(self.widget_2)
+        self.verticalLayout_3.addWidget(self.treeWidget)
 
         self.Tags.setStyleSheet("""
             background-color: #282f39;
             color: white;
         """)
 
-        self.verticalLayout_3.addLayout(self.verticalLayout_2)
         self.horizontalLayout_3.addWidget(self.Tags)
         self.Notes = QtWidgets.QFrame(self.Notes_Tags)
+        self.Notes.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.Notes.setFrameShadow(QtWidgets.QFrame.Plain)
         self.Notes.setObjectName("Notes")
 
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.Notes)
@@ -480,58 +467,13 @@ class Ui_MainWindow(object):
         """)
 
         self.tabWidget = NotesTabWidget(self.Notes)
-        #self.tabWidget1 = TabPlainTextEdit(self.Notes)
-
+        
+        # self.horizontalLayout_6.addLayout(self.tabWidgetHorizontalLayout)
         self.horizontalLayout_6.addWidget(self.tabWidget)
         self.horizontalLayout_3.addWidget(self.Notes)
-
-        self.Tools = QtWidgets.QFrame(self.Notes_Tags)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.Tools.sizePolicy().hasHeightForWidth())
-        self.Tools.setSizePolicy(sizePolicy)
-        self.Tools.setMaximumSize(QtCore.QSize(25, 120))
-        self.Tools.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.Tools.setObjectName("Tools")
-        self.horizontalLayout_9 = QtWidgets.QHBoxLayout(self.Tools)
-        self.horizontalLayout_9.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_9.setObjectName("horizontalLayout_9")
-        self.verticalLayout = QtWidgets.QVBoxLayout()
-        self.verticalLayout.setObjectName("verticalLayout")
-
-        # toolbar bold, italic and underline buttons
-        self.italicButton = QtWidgets.QToolButton(self.Tools)
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("resources/italics.ico"),
-                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.italicButton.setIcon(icon)
-        self.italicButton.setObjectName("italicButton")
-        self.verticalLayout.addWidget(self.italicButton)
-        self.italicButton.clicked.connect(self.tabWidget.setItalic)
-
-        self.boldButton = QtWidgets.QToolButton(self.Tools)
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("resources/bold.ico"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.boldButton.setIcon(icon1)
-        self.boldButton.setObjectName("boldButton")
-        self.verticalLayout.addWidget(self.boldButton)
-        self.boldButton.clicked.connect(self.tabWidget.setBold)
-
-        self.underlineButton = QtWidgets.QToolButton(self.Tools)
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("resources/underline.ico"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.underlineButton.setIcon(icon2)
-        self.underlineButton.setObjectName("underlineButton")
-        self.verticalLayout.addWidget(self.underlineButton)
-        self.underlineButton.clicked.connect(self.tabWidget.setUnderline)
-
-        self.horizontalLayout_9.addLayout(self.verticalLayout)
-        self.horizontalLayout_3.addWidget(self.Tools, 0, QtCore.Qt.AlignTop)
+        
+        # self.horizontalLayout_9.addLayout(self.verticalLayout)
+        # self.horizontalLayout_3.addWidget(self.Tools, 0, QtCore.Qt.AlignTop)
         self.Menu_Notes_Tags.addWidget(self.Notes_Tags)
         self.horizontalLayout_2.addLayout(self.Menu_Notes_Tags)
         self.horizontalLayout.addWidget(self.Box)
@@ -548,7 +490,7 @@ class Ui_MainWindow(object):
         self.menubar.setObjectName("menubar")
 
         self.menubar.setStyleSheet("""
-            background-color: #282f39;
+            background-color: #2b3844;
             color: white;
         """)
 
