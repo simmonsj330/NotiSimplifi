@@ -17,18 +17,17 @@ class TabBar(QTabBar):
     def __init__(self, parent):
         super(TabBar, self).__init__()
         self.parent = parent
-
         self.setAutoFillBackground(True)
-
         self.setStyleSheet("""
             QTabBar::close-button {
-                image: url(delete_tab.png);
+                image: url(./resources/delete_tab.png);
                 subcontrol-position: left;
             }
             QTabBar::tab {
                 color: black;
                 background: #77dd77;
                 border-left: 1px solid black;
+                text-align: center;
             }
             QTabBar::tab::first {
                 border-left: none;
@@ -40,6 +39,7 @@ class TabBar(QTabBar):
                 background: #8be28b;
             }
             QTabBar::tab::selected {
+                font: bold;
                 background: #b4ecb4;
             }
             """)
@@ -55,7 +55,7 @@ class TabBar(QTabBar):
         # the number of tabs to prevent the tabbar expanding past
         # its tab widget parent
         max_width = int(self.parent.width()) - \
-                        int(self.parent.addTabButton.width())
+                    int(self.parent.addTabButton.width())
         width = int(max_width / self.parent.count()) + 1
 
         return QSize(width, size.height())
@@ -90,6 +90,7 @@ class TabPlainTextEdit(QtWidgets.QTextEdit):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
+
 
 class NotesTabWidget(QtWidgets.QTabWidget):
     def __init__(self, parent):
@@ -138,14 +139,6 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.setDocumentMode(True)
         self.tabCloseRequested.connect(self.close_tab)
         self.add_new_tab()
-        # self.setStyleSheet("""
-        #     QTabWidget::pane {
-        #         background-color: #171e24;
-        #     }
-        #     QTabWidget::tab-bar {
-        #         background: #171e24;
-        #     }
-        # """)
 
     # this prevents duplicate file names so that way we don't overwrite
     # any existing note files
@@ -155,7 +148,7 @@ class NotesTabWidget(QtWidgets.QTabWidget):
 
         # create list of all current file names
         current_tab_names = [self.tabBar().tabText(i)
-                                         for i in range(self.count())]
+                             for i in range(self.count())]
         saved_file_names = [os.path.basename(
             name) for name in glob.glob("saved_notes/*.txt")]
         # combines the two lists above into a single list of unique values
@@ -253,7 +246,7 @@ class NotesTabWidget(QtWidgets.QTabWidget):
             note_text = self.tab.plainTextEdit.toPlainText()
             # TODO: change this to {current directory}/saved_notes/{note_name}
             file_name = 'saved_notes/' + \
-                self.tabText(self.currentIndex()) + '.txt'
+                        self.tabText(self.currentIndex()) + '.txt'
             with open(file_name, 'w') as note:
                 note.write(note_text)
 
@@ -291,7 +284,7 @@ class NotesTabWidget(QtWidgets.QTabWidget):
             else:
                 if name:
                     f_name = 'saved_notes/' + \
-                        self.tabText(self.currentIndex()) + '.txt'
+                             self.tabText(self.currentIndex()) + '.txt'
                     os.remove(f_name)
                 with open(file_name, 'w') as note:
                     note.write(note_text)
@@ -301,7 +294,7 @@ class NotesTabWidget(QtWidgets.QTabWidget):
     # code from https://pythonprogramming.net/open-files-pyqt-tutorial/
     def openTab(self):
         name, _filter = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File')
-        file = open(name,'r')
+        file = open(name, 'r')
 
         # strip path and file extension from file name
         name = os.path.splitext(os.path.basename(name))[0]
@@ -355,10 +348,8 @@ class NotesTabWidget(QtWidgets.QTabWidget):
 
         return notInUse
 
-
     def menubar_newtab(self):
         self.add_new_tab()
-
 
 
 class ErrorDialog(QtWidgets.QDialog):
@@ -391,6 +382,7 @@ class ErrorDialog(QtWidgets.QDialog):
         self.layout.addWidget(self.btnBox)
         self.setLayout(self.layout)
 
+
 # A good portion of this is designer code
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -405,7 +397,6 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
 
         self.centralwidget.setAutoFillBackground(True)
-
 
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
@@ -439,52 +430,37 @@ class Ui_MainWindow(object):
         # Tree widget
         '''self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)'''
-        
-        #path = '/saved_notes'
+
+        # path = '/saved_notes'
         self.model = QFileSystemModel()
-        #print(QDir.setPath(path))
+        # print(QDir.setPath(path))
         self.model.setRootPath(QDir.currentPath())
         self.tree = QTreeView()
         self.tree.setModel(self.model)
         self.tree.setRootIndex(self.model.index(QDir.currentPath()))
-        self.tree.setGeometry(QtCore.QRect(0,0,201,481))
-        
+        self.tree.setGeometry(QtCore.QRect(0, 0, 201, 481))
+
         self.tree.setAnimated(False)
         self.tree.setIndentation(20)
         self.tree.setSortingEnabled(True)
-        
+
         self.tree.setWindowTitle("Dir View")
 
-        #https://stackoverflow.com/questions/58937754/hide-size-type-and-date-modified-columns-in-qfilesystemmodel
+        # https://stackoverflow.com/questions/58937754/hide-size-type-and-date-modified-columns-in-qfilesystemmodel
         for i in range(1, self.tree.model().columnCount()):
             self.tree.header().hideSection(i)
 
-        self.verticalLayout_2.addWidget(self.tree)
-
-        self.widget = QtWidgets.QWidget(self.Tags)
-        self.widget.setObjectName("widget")
-        self.verticalLayout_2.addWidget(self.widget)
-        
-        # self.widget_2 = QtWidgets.QWidget(self.Tags)
-        # self.widget_2.setMaximumSize(QtCore.QSize(16777215, 60))
-        # self.widget_2.setObjectName("widget_2")
-        # self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.widget_2)
-        # self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        # self.pushButton = QtWidgets.QPushButton(self.widget_2)
-        # self.pushButton.setMaximumSize(QtCore.QSize(60, 16777215))
-        # self.pushButton.setObjectName("pushButton")
-        # self.horizontalLayout_4.addWidget(self.pushButton)
-        # self.verticalLayout_2.addWidget(self.widget_2)
+        self.verticalLayout_3.addWidget(self.tree)
 
         self.Tags.setStyleSheet("""
             background-color: #282f39;
             color: white;
         """)
 
-        self.verticalLayout_3.addLayout(self.verticalLayout_2)
         self.horizontalLayout_3.addWidget(self.Tags)
         self.Notes = QtWidgets.QFrame(self.Notes_Tags)
-
+        self.Notes.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.Notes.setFrameShadow(QtWidgets.QFrame.Plain)
         self.Notes.setObjectName("Notes")
 
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.Notes)
@@ -505,58 +481,13 @@ class Ui_MainWindow(object):
         """)
 
         self.tabWidget = NotesTabWidget(self.Notes)
-        #self.tabWidget1 = TabPlainTextEdit(self.Notes)
 
+        # self.horizontalLayout_6.addLayout(self.tabWidgetHorizontalLayout)
         self.horizontalLayout_6.addWidget(self.tabWidget)
         self.horizontalLayout_3.addWidget(self.Notes)
 
-        self.Tools = QtWidgets.QFrame(self.Notes_Tags)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.Tools.sizePolicy().hasHeightForWidth())
-        self.Tools.setSizePolicy(sizePolicy)
-        self.Tools.setMaximumSize(QtCore.QSize(25, 120))
-        self.Tools.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.Tools.setObjectName("Tools")
-        self.horizontalLayout_9 = QtWidgets.QHBoxLayout(self.Tools)
-        self.horizontalLayout_9.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_9.setObjectName("horizontalLayout_9")
-        self.verticalLayout = QtWidgets.QVBoxLayout()
-        self.verticalLayout.setObjectName("verticalLayout")
-
-        # toolbar bold, italic and underline buttons
-        self.italicButton = QtWidgets.QToolButton(self.Tools)
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("resources/italics.ico"),
-                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.italicButton.setIcon(icon)
-        self.italicButton.setObjectName("italicButton")
-        self.verticalLayout.addWidget(self.italicButton)
-        self.italicButton.clicked.connect(self.tabWidget.setItalic)
-
-        self.boldButton = QtWidgets.QToolButton(self.Tools)
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("resources/bold.ico"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.boldButton.setIcon(icon1)
-        self.boldButton.setObjectName("boldButton")
-        self.verticalLayout.addWidget(self.boldButton)
-        self.boldButton.clicked.connect(self.tabWidget.setBold)
-
-        self.underlineButton = QtWidgets.QToolButton(self.Tools)
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("resources/underline.ico"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.underlineButton.setIcon(icon2)
-        self.underlineButton.setObjectName("underlineButton")
-        self.verticalLayout.addWidget(self.underlineButton)
-        self.underlineButton.clicked.connect(self.tabWidget.setUnderline)
-
-        self.horizontalLayout_9.addLayout(self.verticalLayout)
-        self.horizontalLayout_3.addWidget(self.Tools, 0, QtCore.Qt.AlignTop)
+        # self.horizontalLayout_9.addLayout(self.verticalLayout)
+        # self.horizontalLayout_3.addWidget(self.Tools, 0, QtCore.Qt.AlignTop)
         self.Menu_Notes_Tags.addWidget(self.Notes_Tags)
         self.horizontalLayout_2.addLayout(self.Menu_Notes_Tags)
         self.horizontalLayout.addWidget(self.Box)
@@ -565,26 +496,32 @@ class Ui_MainWindow(object):
         # self.addMenubar = self.menubar.addMenu('&Add')
 
         # Added this line to show menu bar in the app window
-        self.menubar.setNativeMenuBar(False)     
-        # addMenu.setNativeMenuBar(False) 
-     
+        self.menubar.setNativeMenuBar(False)
+        # addMenu.setNativeMenuBar(False)
+
         # Initializing menu bar
         self.menubar.setGeometry(QtCore.QRect(0, 0, 747, 22))
         self.menubar.setObjectName("menubar")
 
         self.menubar.setStyleSheet("""
-            background-color: #282f39;
+            background-color: #2b3844;
             color: white;
         """)
 
+        # Initializing menu objects
+        # Notisimplifi
         self.menu_Notisimplifi = QtWidgets.QMenu(self.menubar)
         self.menu_Notisimplifi.setObjectName("menu_Notisimplifi")
-        #File
+        # File
         self.menu_File = QtWidgets.QMenu(self.menubar)
         self.menu_File.setObjectName("menu_File")
+        # Edit
+        self.menu_Edit = QtWidgets.QMenu(self.menubar)
+        self.menu_Edit.setObjectName("menu_Edit")
+        # Add
         self.menu_Add = QtWidgets.QMenu(self.menubar)
         self.menu_Add.setObjectName("menu_Add")
-        # MainWindow.setMenuBar(self.menubar)
+        MainWindow.setMenuBar(self.menubar)
 
         # initalize section for add button
         # addMenu.setGeometry(QtCore.QRect(500, 0, 200, 50))
@@ -593,32 +530,38 @@ class Ui_MainWindow(object):
         self.add_button.setObjectName("add_button")'''
         # MainWindow.setMenuBar(addMenu)
 
-        # Initializing menubar 'Add' drop down actions
+        '''
+        Initializing menubar action objects
+        They are grouped together by what menubar section they are under
+        '''
+        # Add Folder and Add File
         self.addFolder = QtWidgets.QAction(MainWindow)
         self.addFolder.setObjectName("addFolder")
         self.addFile = QtWidgets.QAction(MainWindow)
         self.addFile.setObjectName("addFile")
 
+        # TODO wtf is this section here for?
         # Initialize add button functionality
         self.actionAdd = QtWidgets.QAction(MainWindow)
         self.actionAdd.setObjectName("actionAdd")
-    
-        # Initializing menu bar 'Notisimplifi' drop down actions
+
+        # About and Quit
         self.actionAbout = QtWidgets.QAction(MainWindow)
         self.actionAbout.setObjectName("actionAbout")
         self.actionQuit = QtWidgets.QAction(MainWindow)
         self.actionQuit.setObjectName("actionQuit")
 
-        # Initializing menu bar 'File' drop down actions
+        # Open and Save
+        self.actionNewtab = QtWidgets.QAction(MainWindow)
+        self.actionNewtab.setObjectName("actionOpen")
         self.actionOpen = QtWidgets.QAction(MainWindow)
         self.actionOpen.setObjectName("actionOpen")
         self.actionSave = QtWidgets.QAction(MainWindow)
         self.actionSave.setObjectName("actionSave")
-        
         self.actionSaveas = QtWidgets.QAction(MainWindow)
         self.actionSaveas.setObjectName("actionSaveas")
 
-        #Undo and Copy
+        # Undo and Copy
         self.actionUndo = QtWidgets.QAction(MainWindow)
         self.actionUndo.setObjectName("actionUndo")
         self.actionCopy = QtWidgets.QAction(MainWindow)
@@ -631,10 +574,10 @@ class Ui_MainWindow(object):
         openFile.setStatusTip('Open File')
         openFile.triggered.connect(self.menu_File)'''
 
-        # connecting action to current tab 
+        # connecting action to current tab
         self.actionSave.triggered.connect(self.tabWidget.saveTab)
-      
         self.actionOpen.triggered.connect(self.tabWidget.openTab)
+        self.actionNewtab.triggered.connect(self.tabWidget.menubar_newtab)
 
         # Setting layout and separators of 'File' drop down actions
         self.menu_Notisimplifi.addAction(self.actionAbout)
@@ -642,12 +585,6 @@ class Ui_MainWindow(object):
         self.menu_Notisimplifi.addAction(self.actionQuit)
 
         # Setting layout and seperators of 'File' drop down actions
-        self.menu_File.addAction(self.actionOpen)
-        self.menu_File.addSeparator()
-        self.menu_File.addAction(self.actionSave)
-        # self.menu_File.addSeparator()
-        # self.menu_File.addAction()
-
         self.menu_File.addAction(self.actionNewtab)
         self.menu_File.addSeparator()
         self.menu_File.addAction(self.actionOpen)
@@ -663,6 +600,7 @@ class Ui_MainWindow(object):
         self.menu_Edit.addAction(self.actionCopy)
         self.menu_Edit.addAction(self.actionPaste)
 
+        # Setting layout and seperators of 'Add' drop down actions
         self.menu_Add.addAction(self.addFolder)
         self.menu_Add.addSeparator()
         self.menu_Add.addAction(self.addFile)
@@ -670,30 +608,23 @@ class Ui_MainWindow(object):
         # Adding actions to menu actions that can take place
         self.menubar.addAction(self.menu_Notisimplifi.menuAction())
         self.menubar.addAction(self.menu_File.menuAction())
-        self.menubar.addAction(self.menu_Add.menuAction())
-
-        # self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        # self.statusbar.setObjectName("statusbar")
-        # MainWindow.setStatusBar(self.statusbar)
-
-        self.menubar.addAction(self.menu_Notisimplifi.menuAction())
         self.menubar.addAction(self.menu_Edit.menuAction())
         self.menubar.addAction(self.menu_Add.menuAction())
-       
+
         #####################################################################
         self.tb2 = QtWidgets.QToolBar(MainWindow)
         self.tb2.setFloatable(False)
         self.tb2.setMovable(False)
         self.tb2.setIconSize(QSize(13, 13))
-        
+
         MainWindow.addToolBar(self.tb2)
         # self.tb.setOrientation(Qt.Vertical)
         # self.tb.setGeometry(QtCore.QRect(0, 0, 747, 22))
 
         # toolbar bold, italic and underline buttons
-        
+
         self.tb2.addSeparator()
-        
+
         self.bold_icon = QtGui.QIcon()
         self.bold_icon.addPixmap(QtGui.QPixmap("resources/white_icons/bold.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
@@ -701,21 +632,23 @@ class Ui_MainWindow(object):
         self.boldButton.setCheckable(True)
         self.boldButton.triggered.connect(self.tabWidget.setBold)
         self.tb2.addAction(self.boldButton)
-        
+
         self.tb2.addSeparator()
-        
+
         self.underline_icon = QtGui.QIcon()
-        self.underline_icon.addPixmap(QtGui.QPixmap("resources/white_icons/underline.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.underline_icon.addPixmap(QtGui.QPixmap("resources/white_icons/underline.png"), QtGui.QIcon.Normal,
+                                      QtGui.QIcon.Off)
 
         self.underlineButton = QAction(self.underline_icon, '', self.tb2)
         self.underlineButton.setCheckable(True)
         self.underlineButton.triggered.connect(self.tabWidget.setUnderline)
         self.tb2.addAction(self.underlineButton)
-        
+
         self.tb2.addSeparator()
 
         self.italic_icon = QtGui.QIcon()
-        self.italic_icon.addPixmap(QtGui.QPixmap("resources/white_icons/italic.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.italic_icon.addPixmap(QtGui.QPixmap("resources/white_icons/italic.png"), QtGui.QIcon.Normal,
+                                   QtGui.QIcon.Off)
 
         self.italicButton = QAction(self.italic_icon, '', self.tb2)
         self.italicButton.setCheckable(True)
@@ -728,32 +661,32 @@ class Ui_MainWindow(object):
               border-bottom: 1px solid #19232D;
               spacing: 0px;
             }
-            
+
             QToolBar QToolButton {
               margin: -2px;
               background-color: #212b34;
               border-bottom: 1px solid #212b34;
             }
-            
+
             QToolBar QToolButton:hover {
               border-bottom: 1px solid #148CD2;
             }
-            
+
             QToolBar QToolButton:checked {
               border-bottom: 1px solid #19232D;
               background-color: #19232D;
             }
-            
+
             QToolBar QToolButton:checked:hover {
               border-bottom: 1px solid #148CD2;
             }
         """)
-            # QToolBar::separator:horizontal {
-            #     image: url("./resources/white_icons/toolbar_separator_horizontal");
-            #     margin: -2px;
-            #     height: auto;
-            #     width: 50%;
-            # }
+        # QToolBar::separator:horizontal {
+        #     image: url("./resources/white_icons/toolbar_separator_horizontal");
+        #     margin: -2px;
+        #     height: auto;
+        #     width: 50%;
+        # }
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
@@ -768,8 +701,7 @@ class Ui_MainWindow(object):
         # self.toolButton_2.setText(_translate("MainWindow", "..."))
         # self.toolButton_3.setText(_translate("MainWindow", "..."))
 
-        self.menu_Notisimplifi.setTitle(
-            _translate("MainWindow", "&Notisimplifi"))
+        self.menu_Notisimplifi.setTitle(_translate("MainWindow", "&Notisimplifi"))
         self.menu_File.setTitle(_translate("MainWindow", "&File"))
         self.menu_Edit.setTitle(_translate("MainWindow", "&Edit"))
         self.menu_Add.setTitle(_translate("MainWindow", "&Add"))
@@ -784,17 +716,6 @@ class Ui_MainWindow(object):
         self.actionUndo.setText(_translate("MainWindow", "Undo"))
         self.actionCopy.setText(_translate("MainWindow", "Copy"))
         self.actionPaste.setText(_translate("MainWindow", "Paste"))
-        
-        # __sortingEnabled = self.treeWidget.isSortingEnabled()
-        self.treeWidget.setSortingEnabled(False)
-        self.treeWidget.topLevelItem(0).setText(0, _translate("MainWindow", "Senior Design"))
-        self.treeWidget.topLevelItem(0).child(0).setText(0, _translate("MainWindow", "Intro to Course"))
-        self.treeWidget.topLevelItem(0).child(1).setText(0, _translate("MainWindow", "Resume/CV"))
-        self.treeWidget.topLevelItem(0).child(2).setText(0, _translate("MainWindow", "Project Management"))
-        self.treeWidget.topLevelItem(1).setText(0, _translate("MainWindow", "Software Engineering"))
-        self.treeWidget.topLevelItem(1).child(0).setText(0, _translate("MainWindow", "Project Iterations"))
-        self.treeWidget.topLevelItem(1).child(1).setText(0, _translate("MainWindow", "Process"))
-        self.treeWidget.topLevelItem(1).child(2).setText(0, _translate("MainWindow", "Usability"))'''
 
 # executes program
 if __name__ == "__main__":
