@@ -17,6 +17,7 @@ class TabBar(QTabBar):
     def __init__(self, parent):
         super(TabBar, self).__init__()
         self.parent = parent
+        self.setAutoFillBackground(True)
         self.setStyleSheet("""
             QTabBar::close-button {
                 image: url(delete_tab.png);
@@ -26,6 +27,7 @@ class TabBar(QTabBar):
                 color: black;
                 background: #77dd77;
                 border-left: 1px solid black;
+                text-align: center;
             }
             QTabBar::tab::first {
                 border-left: none;
@@ -37,6 +39,7 @@ class TabBar(QTabBar):
                 background: #8be28b;
             }
             QTabBar::tab::selected {
+                font: bold;
                 background: #b4ecb4;
             }
             """)
@@ -135,14 +138,6 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.setDocumentMode(True)
         self.tabCloseRequested.connect(self.close_tab)
         self.add_new_tab()
-        # self.setStyleSheet("""
-        #     QTabWidget::pane {
-        #         background-color: #171e24;
-        #     }
-        #     QTabWidget::tab-bar {
-        #         background: #171e24;
-        #     }
-        # """)
 
     # this prevents duplicate file names so that way we don't overwrite
     # any existing note files
@@ -399,6 +394,9 @@ class Ui_MainWindow(object):
         """)
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
+
+        self.centralwidget.setAutoFillBackground(True)
+
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -407,27 +405,30 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.Box)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.Menu_Notes_Tags = QtWidgets.QVBoxLayout()
+
         self.Menu_Notes_Tags.setObjectName("Menu_Notes_Tags")
         self.Notes_Tags = QtWidgets.QWidget(self.Box)
         self.Notes_Tags.setObjectName("Notes_Tags")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.Notes_Tags)
-        self.horizontalLayout_3.setContentsMargins(-1, -1, 0, -1)
+        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
+        # self.horizontalLayout_3.setContentsMargins(-1, -1, 0, -1)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+
         self.Tags = QtWidgets.QFrame(self.Notes_Tags)
         self.Tags.setMaximumSize(QtCore.QSize(200, 16777215))
-        self.Tags.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.Tags.setFrameShadow(QtWidgets.QFrame.Raised)
+        # self.Tags.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.Tags.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.Tags.setFrameShadow(QtWidgets.QFrame.Plain)
         self.Tags.setObjectName("Tags")
+
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.Tags)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_2.setSpacing(0)
-        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.verticalLayout_3.setSpacing(0)
 
         # Tree widget
         self.treeWidget = QtWidgets.QTreeWidget(self.Tags)
-        self.treeWidget.setGeometry(QtCore.QRect(0, 0, 201, 481))
+        # self.treeWidget.setGeometry(QtCore.QRect(0, 0, 201, 481))
         self.treeWidget.setUniformRowHeights(False)
         self.treeWidget.setObjectName("treeWidget")
 
@@ -439,31 +440,17 @@ class Ui_MainWindow(object):
         item_1 = QtWidgets.QTreeWidgetItem(item_0)
         item_1 = QtWidgets.QTreeWidgetItem(item_0)
         item_1 = QtWidgets.QTreeWidgetItem(item_0)
-        self.verticalLayout_2.addWidget(self.treeWidget)
-
-        self.widget = QtWidgets.QWidget(self.Tags)
-        self.widget.setObjectName("widget")
-        self.verticalLayout_2.addWidget(self.widget)
-        
-        # self.widget_2 = QtWidgets.QWidget(self.Tags)
-        # self.widget_2.setMaximumSize(QtCore.QSize(16777215, 60))
-        # self.widget_2.setObjectName("widget_2")
-        # self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.widget_2)
-        # self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        # self.pushButton = QtWidgets.QPushButton(self.widget_2)
-        # self.pushButton.setMaximumSize(QtCore.QSize(60, 16777215))
-        # self.pushButton.setObjectName("pushButton")
-        # self.horizontalLayout_4.addWidget(self.pushButton)
-        # self.verticalLayout_2.addWidget(self.widget_2)
+        self.verticalLayout_3.addWidget(self.treeWidget)
 
         self.Tags.setStyleSheet("""
             background-color: #282f39;
             color: white;
         """)
 
-        self.verticalLayout_3.addLayout(self.verticalLayout_2)
         self.horizontalLayout_3.addWidget(self.Tags)
         self.Notes = QtWidgets.QFrame(self.Notes_Tags)
+        self.Notes.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.Notes.setFrameShadow(QtWidgets.QFrame.Plain)
         self.Notes.setObjectName("Notes")
 
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.Notes)
@@ -484,58 +471,13 @@ class Ui_MainWindow(object):
         """)
 
         self.tabWidget = NotesTabWidget(self.Notes)
-        #self.tabWidget1 = TabPlainTextEdit(self.Notes)
-
+        
+        # self.horizontalLayout_6.addLayout(self.tabWidgetHorizontalLayout)
         self.horizontalLayout_6.addWidget(self.tabWidget)
         self.horizontalLayout_3.addWidget(self.Notes)
-
-        self.Tools = QtWidgets.QFrame(self.Notes_Tags)
-        sizePolicy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.Tools.sizePolicy().hasHeightForWidth())
-        self.Tools.setSizePolicy(sizePolicy)
-        self.Tools.setMaximumSize(QtCore.QSize(25, 120))
-        self.Tools.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.Tools.setObjectName("Tools")
-        self.horizontalLayout_9 = QtWidgets.QHBoxLayout(self.Tools)
-        self.horizontalLayout_9.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_9.setObjectName("horizontalLayout_9")
-        self.verticalLayout = QtWidgets.QVBoxLayout()
-        self.verticalLayout.setObjectName("verticalLayout")
-
-        # toolbar bold, italic and underline buttons
-        self.italicButton = QtWidgets.QToolButton(self.Tools)
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("resources/italics.ico"),
-                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.italicButton.setIcon(icon)
-        self.italicButton.setObjectName("italicButton")
-        self.verticalLayout.addWidget(self.italicButton)
-        self.italicButton.clicked.connect(self.tabWidget.setItalic)
-
-        self.boldButton = QtWidgets.QToolButton(self.Tools)
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("resources/bold.ico"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.boldButton.setIcon(icon1)
-        self.boldButton.setObjectName("boldButton")
-        self.verticalLayout.addWidget(self.boldButton)
-        self.boldButton.clicked.connect(self.tabWidget.setBold)
-
-        self.underlineButton = QtWidgets.QToolButton(self.Tools)
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("resources/underline.ico"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.underlineButton.setIcon(icon2)
-        self.underlineButton.setObjectName("underlineButton")
-        self.verticalLayout.addWidget(self.underlineButton)
-        self.underlineButton.clicked.connect(self.tabWidget.setUnderline)
-
-        self.horizontalLayout_9.addLayout(self.verticalLayout)
-        self.horizontalLayout_3.addWidget(self.Tools, 0, QtCore.Qt.AlignTop)
+        
+        # self.horizontalLayout_9.addLayout(self.verticalLayout)
+        # self.horizontalLayout_3.addWidget(self.Tools, 0, QtCore.Qt.AlignTop)
         self.Menu_Notes_Tags.addWidget(self.Notes_Tags)
         self.horizontalLayout_2.addLayout(self.Menu_Notes_Tags)
         self.horizontalLayout.addWidget(self.Box)
@@ -554,7 +496,7 @@ class Ui_MainWindow(object):
         self.menubar.setObjectName("menubar")
 
         self.menubar.setStyleSheet("""
-            background-color: #282f39;
+            background-color: #2b3844;
             color: white;
         """)
 
@@ -571,7 +513,7 @@ class Ui_MainWindow(object):
         #Add
         self.menu_Add = QtWidgets.QMenu(self.menubar)
         self.menu_Add.setObjectName("menu_Add")
-        # MainWindow.setMenuBar(self.menubar)
+        MainWindow.setMenuBar(self.menubar)
 
         # initalize section for add button
         # addMenu.setGeometry(QtCore.QRect(500, 0, 200, 50))
@@ -663,12 +605,82 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_File.menuAction())
         self.menubar.addAction(self.menu_Edit.menuAction())
         self.menubar.addAction(self.menu_Add.menuAction())
+        self.menubar.addAction(self.menu_Notisimplifi.menuAction())
+       
+        #####################################################################
+        self.tb2 = QtWidgets.QToolBar(MainWindow)
+        self.tb2.setFloatable(False)
+        self.tb2.setMovable(False)
+        self.tb2.setIconSize(QSize(13, 13))
+        
+        MainWindow.addToolBar(self.tb2)
+        # self.tb.setOrientation(Qt.Vertical)
+        # self.tb.setGeometry(QtCore.QRect(0, 0, 747, 22))
 
-        # self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        # self.statusbar.setObjectName("statusbar")
-        # MainWindow.setStatusBar(self.statusbar)
+        # toolbar bold, italic and underline buttons
+        
+        self.tb2.addSeparator()
+        
+        self.bold_icon = QtGui.QIcon()
+        self.bold_icon.addPixmap(QtGui.QPixmap("resources/white_icons/bold.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
-        #self.menubar.addAction(self.menu_Notisimplifi.menuAction())
+        self.boldButton = QAction(self.bold_icon, '', self.tb2)
+        self.boldButton.setCheckable(True)
+        self.boldButton.triggered.connect(self.tabWidget.setBold)
+        self.tb2.addAction(self.boldButton)
+        
+        self.tb2.addSeparator()
+        
+        self.underline_icon = QtGui.QIcon()
+        self.underline_icon.addPixmap(QtGui.QPixmap("resources/white_icons/underline.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.underlineButton = QAction(self.underline_icon, '', self.tb2)
+        self.underlineButton.setCheckable(True)
+        self.underlineButton.triggered.connect(self.tabWidget.setUnderline)
+        self.tb2.addAction(self.underlineButton)
+        
+        self.tb2.addSeparator()
+
+        self.italic_icon = QtGui.QIcon()
+        self.italic_icon.addPixmap(QtGui.QPixmap("resources/white_icons/italic.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.italicButton = QAction(self.italic_icon, '', self.tb2)
+        self.italicButton.setCheckable(True)
+        self.italicButton.triggered.connect(self.tabWidget.setItalic)
+        self.tb2.addAction(self.italicButton)
+
+        self.tb2.setStyleSheet("""
+            QToolBar {
+              background-color: #212b34;
+              border-bottom: 1px solid #19232D;
+              spacing: 0px;
+            }
+            
+            QToolBar QToolButton {
+              margin: -2px;
+              background-color: #212b34;
+              border-bottom: 1px solid #212b34;
+            }
+            
+            QToolBar QToolButton:hover {
+              border-bottom: 1px solid #148CD2;
+            }
+            
+            QToolBar QToolButton:checked {
+              border-bottom: 1px solid #19232D;
+              background-color: #19232D;
+            }
+            
+            QToolBar QToolButton:checked:hover {
+              border-bottom: 1px solid #148CD2;
+            }
+        """)
+            # QToolBar::separator:horizontal {
+            #     image: url("./resources/white_icons/toolbar_separator_horizontal");
+            #     margin: -2px;
+            #     height: auto;
+            #     width: 50%;
+            # }
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
