@@ -558,7 +558,7 @@ class Ui_MainWindow(object):
         self.menu_File.setObjectName("menu_File")
         self.menu_Add = QtWidgets.QMenu(self.menubar)
         self.menu_Add.setObjectName("menu_Add")
-        # MainWindow.setMenuBar(self.menubar)
+        MainWindow.setMenuBar(self.menubar)
 
         # initalize section for add button
         # addMenu.setGeometry(QtCore.QRect(500, 0, 200, 50))
@@ -619,12 +619,82 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_Notisimplifi.menuAction())
         self.menubar.addAction(self.menu_File.menuAction())
         self.menubar.addAction(self.menu_Add.menuAction())
-
-        # self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        # self.statusbar.setObjectName("statusbar")
-        # MainWindow.setStatusBar(self.statusbar)
-
         self.menubar.addAction(self.menu_Notisimplifi.menuAction())
+       
+        #####################################################################
+        self.tb2 = QtWidgets.QToolBar(MainWindow)
+        self.tb2.setFloatable(False)
+        self.tb2.setMovable(False)
+        self.tb2.setIconSize(QSize(13, 13))
+        
+        MainWindow.addToolBar(self.tb2)
+        # self.tb.setOrientation(Qt.Vertical)
+        # self.tb.setGeometry(QtCore.QRect(0, 0, 747, 22))
+
+        # toolbar bold, italic and underline buttons
+        
+        self.tb2.addSeparator()
+        
+        self.bold_icon = QtGui.QIcon()
+        self.bold_icon.addPixmap(QtGui.QPixmap("resources/white_icons/bold.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.boldButton = QAction(self.bold_icon, '', self.tb2)
+        self.boldButton.setCheckable(True)
+        self.boldButton.triggered.connect(self.tabWidget.setBold)
+        self.tb2.addAction(self.boldButton)
+        
+        self.tb2.addSeparator()
+        
+        self.underline_icon = QtGui.QIcon()
+        self.underline_icon.addPixmap(QtGui.QPixmap("resources/white_icons/underline.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.underlineButton = QAction(self.underline_icon, '', self.tb2)
+        self.underlineButton.setCheckable(True)
+        self.underlineButton.triggered.connect(self.tabWidget.setUnderline)
+        self.tb2.addAction(self.underlineButton)
+        
+        self.tb2.addSeparator()
+
+        self.italic_icon = QtGui.QIcon()
+        self.italic_icon.addPixmap(QtGui.QPixmap("resources/white_icons/italic.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.italicButton = QAction(self.italic_icon, '', self.tb2)
+        self.italicButton.setCheckable(True)
+        self.italicButton.triggered.connect(self.tabWidget.setItalic)
+        self.tb2.addAction(self.italicButton)
+
+        self.tb2.setStyleSheet("""
+            QToolBar {
+              background-color: #212b34;
+              border-bottom: 1px solid #19232D;
+              spacing: 0px;
+            }
+            
+            QToolBar QToolButton {
+              margin: -2px;
+              background-color: #212b34;
+              border-bottom: 1px solid #212b34;
+            }
+            
+            QToolBar QToolButton:hover {
+              border-bottom: 1px solid #148CD2;
+            }
+            
+            QToolBar QToolButton:checked {
+              border-bottom: 1px solid #19232D;
+              background-color: #19232D;
+            }
+            
+            QToolBar QToolButton:checked:hover {
+              border-bottom: 1px solid #148CD2;
+            }
+        """)
+            # QToolBar::separator:horizontal {
+            #     image: url("./resources/white_icons/toolbar_separator_horizontal");
+            #     margin: -2px;
+            #     height: auto;
+            #     width: 50%;
+            # }
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
