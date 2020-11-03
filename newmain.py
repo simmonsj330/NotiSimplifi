@@ -299,6 +299,21 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         # strip path and file extension from file name
         name = os.path.splitext(os.path.basename(name))[0]
 
+        # check to see if file is already open
+        current_tab_names = [self.tabBar().tabText(i) for i in range(self.count())]
+
+        inUse = True
+        try:
+            temp = current_tab_names.index(name)
+        except ValueError:
+            # if exception is hit, the file is not in use
+            inUse = False
+
+        if inUse:
+            # self.setCurrentWidget(self, temp)
+            self.setCurrentIndex(temp)
+            return
+        
         # create new tab for file
         # TODO: add check here to see if any tabs are open, if none are, use the initial tab
         self.add_new_tab()
