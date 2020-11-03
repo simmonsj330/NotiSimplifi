@@ -6,6 +6,7 @@
 import glob
 import os
 import sys
+import xml.etree.ElementTree as et
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QEventLoop, QTimer, Qt, QSize, QDir
@@ -294,40 +295,42 @@ class NotesTabWidget(QtWidgets.QTabWidget):
     # code from https://pythonprogramming.net/open-files-pyqt-tutorial/
     def openTab(self):
         name, _filter = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File')
-        file = open(name, 'r')
 
-        # strip path and file extension from file name
-        name = os.path.splitext(os.path.basename(name))[0]
+        if name != "":
+            file = open(name, 'r')
 
-        # check to see if file is already open
-        current_tab_names = [self.tabBar().tabText(i) for i in range(self.count())]
+            # strip path and file extension from file name
+            name = os.path.splitext(os.path.basename(name))[0]
 
-        inUse = True
-        try:
-            temp = current_tab_names.index(name)
-        except ValueError:
-            # if exception is hit, the file is not in use
-            inUse = False
+            # check to see if file is already open
+            current_tab_names = [self.tabBar().tabText(i) for i in range(self.count())]
 
-        if inUse:
-            # self.setCurrentWidget(self, temp)
-            self.setCurrentIndex(temp)
-            return
-        
-        # create new tab for file
-        # TODO: add check here to see if any tabs are open, if none are, use the initial tab
-        self.add_new_tab()
+            inUse = True
+            try:
+                temp = current_tab_names.index(name)
+            except ValueError:
+                # if exception is hit, the file is not in use
+                inUse = False
 
-        # write the files text to the new tab's textedit and setting
-        # the tab name to the file's name
-        with file:
-            text = file.read()
-            self.tabBar().setTabText(self.currentIndex(), name)
-            self.currentWidget().plainTextEdit.setText(text)
+            if inUse:
+                # self.setCurrentWidget(self, temp)
+                self.setCurrentIndex(temp)
+                return
+            
+            # create new tab for file
+            # TODO: add check here to see if any tabs are open, if none are, use the initial tab
+            self.add_new_tab()
 
-        # since it is already a saved note, we are setting it's
-        # saveState to True to turn on "auto save"
-        self.currentWidget().saveState = True
+            # write the files text to the new tab's textedit and setting
+            # the tab name to the file's name
+            with file:
+                text = file.read()
+                self.tabBar().setTabText(self.currentIndex(), name)
+                self.currentWidget().plainTextEdit.setText(text)
+
+            # since it is already a saved note, we are setting it's
+            # saveState to True to turn on "auto save"
+            self.currentWidget().saveState = True
 
     def folderTab(self):
         self.text_name = QLineEdit(self)
