@@ -329,6 +329,32 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         # saveState to True to turn on "auto save"
         self.currentWidget().saveState = True
 
+    def folderTab(self):
+        self.text_name = QLineEdit(self)
+        self.text_name.move(100,22)
+        self.text_name.setPlaceholderText("Enter folder name:")
+
+        text, result = QInputDialog.getText(self, 'Add Folder', 'Folder Name:')
+        if result == True:
+            self.text_name.setText(str(text))
+            path = QDir.currentPath()
+            os.mkdir(path + '/' + text)
+
+    def fileTab(self):
+        self.text_name = QLineEdit(self)
+        self.text_name.move(100,22)
+        self.text_name.setPlaceholderText("Enter file name:")
+
+        text, result = QInputDialog.getText(self, 'Add File', 'File Name:')
+        if result == True:
+            self.text_name.setText(str(text))
+            self.add_new_tab()
+            
+            index = self.currentIndex()
+            nameChange = self.savedTabNameChange(text)
+            if nameChange:
+                self.setTabText(index, text)
+
     def savedTabNameChange(self, newName):
         if self.tab.saveState == False:
             return True
@@ -593,6 +619,8 @@ class Ui_MainWindow(object):
         self.actionSave.triggered.connect(self.tabWidget.saveTab)
         self.actionOpen.triggered.connect(self.tabWidget.openTab)
         self.actionNewtab.triggered.connect(self.tabWidget.menubar_newtab)
+        self.addFolder.triggered.connect(self.tabWidget.folderTab)
+        self.addFile.triggered.connect(self.tabWidget.fileTab)
 
         # Setting layout and separators of 'File' drop down actions
         self.menu_Notisimplifi.addAction(self.actionAbout)
