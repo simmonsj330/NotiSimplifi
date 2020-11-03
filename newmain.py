@@ -694,7 +694,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Main Window"))
         # self.pushButton.setText(_translate("MainWindow", "Add"))
 
         # self.toolButton.setText(_translate("MainWindow", "..."))
@@ -705,17 +705,41 @@ class Ui_MainWindow(object):
         self.menu_File.setTitle(_translate("MainWindow", "&File"))
         self.menu_Edit.setTitle(_translate("MainWindow", "&Edit"))
         self.menu_Add.setTitle(_translate("MainWindow", "&Add"))
+
         self.addFolder.setText(_translate("MainWindow", "Folder"))
+        self.addFolder.setShortcut(_translate("MainWindow", "Ctrl+F"))
+
         self.addFile.setText(_translate("MainWindow", "Notes File"))
+        self.addFile.setShortcut(_translate("MainWindow", "Ctrl+N"))
+
+
         self.actionAbout.setText(_translate("MainWindow", "About"))
+
+
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
+        self.actionQuit.setShortcut(_translate("MainWindow", "Ctrl+Q"))
+
         self.actionNewtab.setText(_translate("MainWindow", "New Tab"))
+        self.actionNewtab.setShortcut(_translate("MainWindow", "Ctrl+T"))
+
         self.actionOpen.setText(_translate("MainWindow", "Open"))
+        self.actionOpen.setShortcut(_translate("MainWindow", "Ctrl+O"))
+
         self.actionSave.setText(_translate("MainWindow", "Save"))
+        self.actionSave.setShortcut(_translate("MainWindow", "Ctrl+S"))
+
+
         self.actionSaveas.setText(_translate("MainWindow", "Save As..."))
+        self.actionSaveas.setShortcut(_translate("MainWindow", "Ctrl+Shift+S"))
+
         self.actionUndo.setText(_translate("MainWindow", "Undo"))
+        self.actionUndo.setShortcut(_translate("MainWindow", "Ctrl+Z"))
+
         self.actionCopy.setText(_translate("MainWindow", "Copy"))
+        self.actionCopy.setShortcut(_translate("MainWindow", "Ctrl+C"))
+
         self.actionPaste.setText(_translate("MainWindow", "Paste"))
+        self.actionPaste.setShortcut(_translate("MainWindow", "Ctrl+V"))
 
 # executes program
 if __name__ == "__main__":
