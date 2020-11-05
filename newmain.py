@@ -676,6 +676,7 @@ class Ui_MainWindow(object):
 
         self.boldButton = QAction(self.bold_icon, '', self.tb2)
         self.boldButton.setCheckable(True)
+        self.boldButton.setToolTip('Bold')
         self.boldButton.triggered.connect(self.tabWidget.setBold)
         self.tb2.addAction(self.boldButton)
 
@@ -687,6 +688,7 @@ class Ui_MainWindow(object):
 
         self.underlineButton = QAction(self.underline_icon, '', self.tb2)
         self.underlineButton.setCheckable(True)
+        self.underlineButton.setToolTip('Underline')
         self.underlineButton.triggered.connect(self.tabWidget.setUnderline)
         self.tb2.addAction(self.underlineButton)
 
@@ -698,8 +700,71 @@ class Ui_MainWindow(object):
 
         self.italicButton = QAction(self.italic_icon, '', self.tb2)
         self.italicButton.setCheckable(True)
+        self.italicButton.setToolTip('Italic')
         self.italicButton.triggered.connect(self.tabWidget.setItalic)
         self.tb2.addAction(self.italicButton)
+
+        self.tb2.addSeparator()
+
+        # left justify
+        self.leftAlign_icon = QtGui.QIcon()
+        self.leftAlign_icon.addPixmap(QtGui.QPixmap("resources/white_icons/left-align.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.leftAlignButton = QAction(self.leftAlign_icon, '', self.tb2)
+        self.leftAlignButton.setCheckable(True)
+        self.leftAlignButton.setToolTip('Align Left')
+        # self.leftAlignButton.triggered.connect(self.tabWidget.leftAlign)
+        self.tb2.addAction(self.leftAlignButton)
+
+        self.tb2.addSeparator()
+
+        # center justify
+        self.centerAlign_icon = QtGui.QIcon()
+        self.centerAlign_icon.addPixmap(QtGui.QPixmap("resources/white_icons/center-align-2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.centerAlignButton = QAction(self.centerAlign_icon, '', self.tb2)
+        self.centerAlignButton.setCheckable(True)
+        self.centerAlignButton.setToolTip('Center Text')
+        # self.boldButton.triggered.connect(self.tabWidget.centerAlign)
+        self.tb2.addAction(self.centerAlignButton)
+
+        self.tb2.addSeparator()
+
+        # right justify
+        self.rightAlign_icon = QtGui.QIcon()
+        self.rightAlign_icon.addPixmap(QtGui.QPixmap("resources/white_icons/right-align.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.rightAlignButton = QAction(self.rightAlign_icon, '', self.tb2)
+        self.rightAlignButton.setCheckable(True)
+        self.rightAlignButton.setToolTip('Align Right')
+        # self.leftAlignButton.triggered.connect(self.tabWidget.leftAlign)
+        self.tb2.addAction(self.rightAlignButton)
+
+        self.tb2.addSeparator()
+
+        # left indent
+        self.leftIdent_icon = QtGui.QIcon()
+        self.leftIdent_icon.addPixmap(QtGui.QPixmap("resources/white_icons/left-indent.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.leftIdentButton = QAction(self.leftIdent_icon, '', self.tb2)
+        self.leftIdentButton.setCheckable(True)
+        self.leftIdentButton.setToolTip('Indent Left')
+        # self.leftAlignButton.triggered.connect(self.tabWidget.leftAlign)
+        self.tb2.addAction(self.leftIdentButton)
+
+        self.tb2.addSeparator()
+
+        # right indent
+        self.rightIdent_icon = QtGui.QIcon()
+        self.rightIdent_icon.addPixmap(QtGui.QPixmap("resources/white_icons/right-indent.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        self.rightIdentButton = QAction(self.rightIdent_icon, '', self.tb2)
+        self.rightIdentButton.setCheckable(True)
+        self.rightIdentButton.setToolTip('Indent Right')
+        # self.leftAlignButton.triggered.connect(self.tabWidget.leftAlign)
+        self.tb2.addAction(self.rightIdentButton)
+
+        self.tb2.addSeparator()
 
         self.tb2.setStyleSheet("""
             QToolBar {
