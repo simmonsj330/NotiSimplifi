@@ -352,11 +352,13 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         if result == True:
             self.text_name.setText(str(text))
             self.add_new_tab()
+            path = QDir.currentPath()
+            os.system('touch ' + path + '/' + text + '.txt')
             
             index = self.currentIndex()
             nameChange = self.savedTabNameChange(text)
             if nameChange:
-                self.setTabText(index, text)
+                self.setTabText(index, text) 
 
     def savedTabNameChange(self, newName):
         if self.tab.saveState == False:
@@ -612,11 +614,6 @@ class Ui_MainWindow(object):
         self.actionCopy.setObjectName("actionCopy")
         self.actionPaste = QtWidgets.QAction(MainWindow)
         self.actionPaste.setObjectName("actionPaste")
-
-        '''openFile = QtWidgets.QAction(MainWindow)
-        openFile.setShortcut("Ctrl+O")
-        openFile.setStatusTip('Open File')
-        openFile.triggered.connect(self.menu_File)'''
 
         # connecting action to current tab
         self.actionSave.triggered.connect(self.tabWidget.saveTab)
