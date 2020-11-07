@@ -657,147 +657,231 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_Edit.menuAction())
         self.menubar.addAction(self.menu_Add.menuAction())
 
-        #####################################################################
+        ###################################################################
+        #                     TOOLBAR and TOOL BUTTONS                    #
+        ###################################################################
         self.tb2 = QtWidgets.QToolBar(MainWindow)
         self.tb2.setFloatable(False)
         self.tb2.setMovable(False)
-        self.tb2.setIconSize(QSize(13, 13))
+        self.tb2.setIconSize(QSize(20, 20))
 
         MainWindow.addToolBar(self.tb2)
         # self.tb.setOrientation(Qt.Vertical)
         # self.tb.setGeometry(QtCore.QRect(0, 0, 747, 22))
 
-        # toolbar bold, italic and underline buttons
+        # self.tb2.addSeparator()
+
+        # undo button
+        self.undo_icon = QtGui.QIcon()
+        self.undo_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/undo-new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.undoButton = QAction(self.undo_icon, '', self.tb2)
+        self.undoButton.setCheckable(True)
+        self.undoButton.setToolTip('Undo')
+        # self.undoButton.triggered.connect(self.tabWidget.set)
+        self.tb2.addAction(self.undoButton)
+
+        # redo button
+        self.redo_icon = QtGui.QIcon()
+        self.redo_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/redo-new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.redoButton = QAction(self.redo_icon, '', self.tb2)
+        self.redoButton.setCheckable(True)
+        self.redoButton.setToolTip('Redo')
+        # self.redoButton.triggered.connect(self.tabWidget.set)
+        self.tb2.addAction(self.redoButton)
+
+        # save button
+        self.save_icon = QtGui.QIcon()
+        self.save_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.saveButton = QAction(self.save_icon, '', self.tb2)
+        self.saveButton.setCheckable(True)
+        self.saveButton.setToolTip('Save')
+        # self.saveButton.triggered.connect()
+        self.tb2.addAction(self.saveButton)
+        # self.tb2.addSeparator()
+
+        # newFile button
+        self.newFile_icon = QtGui.QIcon()
+        self.newFile_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/document-1.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.newFileButton = QAction(self.newFile_icon, '', self.tb2)
+        self.newFileButton.setCheckable(True)
+        self.newFileButton.setToolTip('New Note')
+        # self.newFileButton.triggered.connect(self.tabWidget.set)
+        self.tb2.addAction(self.newFileButton)
+        # self.tb2.addSeparator()
+
+        # print button
+        self.print_icon = QtGui.QIcon()
+        self.print_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/printer.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.printButton = QAction(self.print_icon, '', self.tb2)
+        self.printButton.setCheckable(True)
+        self.printButton.setToolTip('Print')
+        # self.printButton.triggered.connect(self.tabWidget.set)
+        self.tb2.addAction(self.printButton)
+        # self.tb2.addSeparator()
 
         self.tb2.addSeparator()
 
+        # bold button
         self.bold_icon = QtGui.QIcon()
-        self.bold_icon.addPixmap(QtGui.QPixmap("resources/white_icons/bold.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-
+        self.bold_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/bold.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.boldButton = QAction(self.bold_icon, '', self.tb2)
         self.boldButton.setCheckable(True)
         self.boldButton.setToolTip('Bold')
         self.boldButton.triggered.connect(self.tabWidget.setBold)
         self.tb2.addAction(self.boldButton)
+        # self.tb2.addSeparator()
 
-        self.tb2.addSeparator()
-
+        # underline button
         self.underline_icon = QtGui.QIcon()
-        self.underline_icon.addPixmap(QtGui.QPixmap("resources/white_icons/underline.png"), QtGui.QIcon.Normal,
-                                      QtGui.QIcon.Off)
-
+        self.underline_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/underline.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.underlineButton = QAction(self.underline_icon, '', self.tb2)
         self.underlineButton.setCheckable(True)
         self.underlineButton.setToolTip('Underline')
         self.underlineButton.triggered.connect(self.tabWidget.setUnderline)
         self.tb2.addAction(self.underlineButton)
+        # self.tb2.addSeparator()
 
-        self.tb2.addSeparator()
-
+        # italic button
         self.italic_icon = QtGui.QIcon()
-        self.italic_icon.addPixmap(QtGui.QPixmap("resources/white_icons/italic.png"), QtGui.QIcon.Normal,
-                                   QtGui.QIcon.Off)
-
+        self.italic_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/italic.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.italicButton = QAction(self.italic_icon, '', self.tb2)
         self.italicButton.setCheckable(True)
         self.italicButton.setToolTip('Italic')
         self.italicButton.triggered.connect(self.tabWidget.setItalic)
         self.tb2.addAction(self.italicButton)
+        # self.tb2.addSeparator()
+
+        # strikethrough button
+        self.strikethrough_icon = QtGui.QIcon()
+        self.strikethrough_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/strikethrough.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.strikethroughButton = QAction(self.strikethrough_icon, '', self.tb2)
+        self.strikethroughButton.setCheckable(True)
+        self.strikethroughButton.setToolTip('Strikethrough')
+        # self.strikethroughButton.triggered.connect(self.tabWidget.set)
+        self.tb2.addAction(self.strikethroughButton)
+        # self.tb2.addSeparator()
+
+        # superscript button
+        self.superscript_icon = QtGui.QIcon()
+        self.superscript_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/superscript.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.superscriptButton = QAction(self.superscript_icon, '', self.tb2)
+        self.superscriptButton.setCheckable(True)
+        self.superscriptButton.setToolTip('Superscript')
+        # self.superscriptButton.triggered.connect(self.tabWidget.set)
+        self.tb2.addAction(self.superscriptButton)
+        # self.tb2.addSeparator()
+
+        # subscript button
+        self.subscript_icon = QtGui.QIcon()
+        self.subscript_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/subscript.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.subscriptButton = QAction(self.subscript_icon, '', self.tb2)
+        self.subscriptButton.setCheckable(True)
+        self.subscriptButton.setToolTip('Subscript')
+        # self.subscriptButton.triggered.connect(self.tabWidget.set)
+        self.tb2.addAction(self.subscriptButton)
+        # self.tb2.addSeparator()
 
         self.tb2.addSeparator()
 
         # left justify
         self.leftAlign_icon = QtGui.QIcon()
-        self.leftAlign_icon.addPixmap(QtGui.QPixmap("resources/white_icons/left-align.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-
+        self.leftAlign_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/left-alignment.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.leftAlignButton = QAction(self.leftAlign_icon, '', self.tb2)
         self.leftAlignButton.setCheckable(True)
         self.leftAlignButton.setToolTip('Align Left')
         # self.leftAlignButton.triggered.connect(self.tabWidget.leftAlign)
         self.tb2.addAction(self.leftAlignButton)
-
-        self.tb2.addSeparator()
+        # self.tb2.addSeparator()
 
         # center justify
         self.centerAlign_icon = QtGui.QIcon()
-        self.centerAlign_icon.addPixmap(QtGui.QPixmap("resources/white_icons/center-align-2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-
+        self.centerAlign_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/center-alignment.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.centerAlignButton = QAction(self.centerAlign_icon, '', self.tb2)
         self.centerAlignButton.setCheckable(True)
         self.centerAlignButton.setToolTip('Center Text')
         # self.boldButton.triggered.connect(self.tabWidget.centerAlign)
         self.tb2.addAction(self.centerAlignButton)
-
-        self.tb2.addSeparator()
+        # self.tb2.addSeparator()
 
         # right justify
         self.rightAlign_icon = QtGui.QIcon()
-        self.rightAlign_icon.addPixmap(QtGui.QPixmap("resources/white_icons/right-align.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-
+        self.rightAlign_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/right-alignment.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.rightAlignButton = QAction(self.rightAlign_icon, '', self.tb2)
         self.rightAlignButton.setCheckable(True)
         self.rightAlignButton.setToolTip('Align Right')
         # self.leftAlignButton.triggered.connect(self.tabWidget.leftAlign)
         self.tb2.addAction(self.rightAlignButton)
-
-        self.tb2.addSeparator()
-
-        # left indent
-        self.leftIdent_icon = QtGui.QIcon()
-        self.leftIdent_icon.addPixmap(QtGui.QPixmap("resources/white_icons/left-indent.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-
-        self.leftIdentButton = QAction(self.leftIdent_icon, '', self.tb2)
-        self.leftIdentButton.setCheckable(True)
-        self.leftIdentButton.setToolTip('Indent Left')
-        # self.leftAlignButton.triggered.connect(self.tabWidget.leftAlign)
-        self.tb2.addAction(self.leftIdentButton)
-
-        self.tb2.addSeparator()
+        # self.tb2.addSeparator()
 
         # right indent
         self.rightIdent_icon = QtGui.QIcon()
-        self.rightIdent_icon.addPixmap(QtGui.QPixmap("resources/white_icons/right-indent.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-
+        self.rightIdent_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/indent.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.rightIdentButton = QAction(self.rightIdent_icon, '', self.tb2)
         self.rightIdentButton.setCheckable(True)
         self.rightIdentButton.setToolTip('Indent Right')
         # self.leftAlignButton.triggered.connect(self.tabWidget.leftAlign)
         self.tb2.addAction(self.rightIdentButton)
+        # self.tb2.addSeparator()
 
-        self.tb2.addSeparator()
+        # left indent
+        self.leftIdent_icon = QtGui.QIcon()
+        self.leftIdent_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/outdent.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.leftIdentButton = QAction(self.leftIdent_icon, '', self.tb2)
+        self.leftIdentButton.setCheckable(True)
+        self.leftIdentButton.setToolTip('Indent Left')
+        # self.leftAlignButton.triggered.connect(self.tabWidget.leftAlign)
+        self.tb2.addAction(self.leftIdentButton)
+        # self.tb2.addSeparator()
+
+        # QToolBar::separator:horizontal {
+        #   image: url("./resources/potential_icons/icons5/png/separator-gray.png");
+        # }
 
         self.tb2.setStyleSheet("""
             QToolBar {
               background-color: #212b34;
-              border-bottom: 1px solid #19232D;
-              spacing: 0px;
-            }
-
-            QToolBar QToolButton {
-              margin: -2px;
-              background-color: #212b34;
               border-bottom: 1px solid #212b34;
+              left: 15px;
+            }
+            
+            QToolBar::separator:horizontal {
+              background-color: #212b34;
+              width: 1px;
+              margin-left: 10px;
+              margin-right: 10px;
+            }
+            
+            QToolBar QToolButton {
+              background-color: #212b34;
+              border: 1px solid #212b34;
+              border-radius: 2px;
+            }
+            
+            QToolBar QToolButton QToolTip {
+              color: white;
+              border: 1px solid gray;
+              border-radius: 3px;
             }
 
             QToolBar QToolButton:hover {
-              border-bottom: 1px solid #148CD2;
+              border: 1px solid #77dd77;
             }
 
             QToolBar QToolButton:checked {
-              border-bottom: 1px solid #19232D;
-              background-color: #19232D;
+              border: 1px solid #b4ecb4;
+              background-color: #5d7992;
             }
 
             QToolBar QToolButton:checked:hover {
-              border-bottom: 1px solid #148CD2;
+              border: 1px solid #77dd77;
             }
         """)
-        # QToolBar::separator:horizontal {
-        #     image: url("./resources/white_icons/toolbar_separator_horizontal");
-        #     margin: -2px;
-        #     height: auto;
-        #     width: 50%;
-        # }
+        # background - color:  # 19232D;
+        # border: 1px solid #b4ecb4;
+
+        ###################################################################
+        #                     TOOLBAR and TOOL BUTTONS                    #
+        ###################################################################
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
