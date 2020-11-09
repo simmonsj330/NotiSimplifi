@@ -382,82 +382,49 @@ class NotesTabWidget(QtWidgets.QTabWidget):
                 return True
 
     # code from https://pythonprogramming.net/open-files-pyqt-tutorial/
-    def openTab(self):
+    def openFileFromMenu(self):
         name, _filter = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File')
+
+        print('name:', name)
         
         if name != "":
-            file = open(name, 'r')
+            self.openFileUsingPath(name)
 
-            # strip path and file extension from file name
-            name = os.path.splitext(os.path.basename(name))[0]
+    def openFileUsingPath(self, filePath):
+        file = open(filePath, 'r')
 
-            # check to see if file is already open
-            current_tab_names = [self.tabBar().tabText(i) for i in range(self.count())]
+        # strip path and file extension from file name
+        name = os.path.splitext(os.path.basename(filePath))[0]
 
-            inUse = True
-            try:
-                temp = current_tab_names.index(name)
-            except ValueError:
-                # if exception is hit, the file is not in use
-                inUse = False
+        # check to see if file is already open
+        current_tab_names = [self.tabBar().tabText(i) for i in range(self.count())]
 
-            if inUse:
-                # self.setCurrentWidget(self, temp)
-                self.setCurrentIndex(temp)
-                return
-            
-            # create new tab for file
-            # TODO: add check here to see if any tabs are open, if none are, use the initial tab
-            self.add_new_tab()
+        inUse = True
+        try:
+            temp = current_tab_names.index(name)
+        except ValueError:
+            # if exception is hit, the file is not in use
+            inUse = False
 
-            # write the files text to the new tab's textedit and setting
-            # the tab name to the file's name
-            with file:
-                text = file.read()
-                self.tabBar().setTabText(self.currentIndex(), name)
-                self.currentWidget().plainTextEdit.setText(text)
+        if inUse:
+            self.setCurrentIndex(temp)
+            return
 
-            # since it is already a saved note, we are setting it's
-            # saveState to True to turn on "auto save"
-            self.currentWidget().saveState = True
+        # create new tab for file
+        self.add_new_tab()
 
-    #Mostly same as 'openTab' except we dont manipulate save states and make the file non-editable
-    def openAbout(self):
-        
-        #This is a temporary place holder for the file until we fix constant paths issue
-        #it will not work on other machines
-        name = "./resources/About.txt"
-        if name != "":
-            file = open(name, 'r')
+        # write the files text to the new tab's textedit and setting
+        with file:
+            text = file.read()
+            self.tabBar().setTabText(self.currentIndex(), name)
+            self.currentWidget().plainTextEdit.setText(text)
 
-            # strip path and file extension from file name
-            name = os.path.splitext(os.path.basename(name))[0]
-
-            # check to see if file is already open
-            current_tab_names = [self.tabBar().tabText(i) for i in range(self.count())]
-
-            inUse = True
-            try:
-                temp = current_tab_names.index(name)
-            except ValueError:
-                # if exception is hit, the file is not in use
-                inUse = False
-
-            if inUse:
-                self.setCurrentIndex(temp)
-                return
-            
-            # create new tab for file
-            self.add_new_tab()
-
-            # write the files text to the new tab's textedit and setting
-            with file:
-                text = file.read()
-                self.tabBar().setTabText(self.currentIndex(), name)
-                self.currentWidget().plainTextEdit.setText(text)
-            
-            #Setting file to non-editable
+        # Setting file to non-editable
+        if self.tabBar().tabText(self.currentIndex()) == 'About':
             self.currentWidget().plainTextEdit.setReadOnly(True)
+        # turn auto-save on for all other files
+        else:
+            self.currentWidget().saveState = True
 
     def folderTab(self):
         self.text_name = QLineEdit(self)
@@ -624,6 +591,9 @@ class Ui_MainWindow(object):
         self.tree.setIndentation(20)
         self.tree.setSortingEnabled(True)
 
+        # connect double click signal to open file
+        self.tree.doubleClicked.connect(self.treeDblClicked)
+
         self.tree.setWindowTitle("Dir View")
 
         # https://stackoverflow.com/questions/58937754/hide-size-type-and-date-modified-columns-in-qfilesystemmodel
@@ -756,10 +726,10 @@ class Ui_MainWindow(object):
         self.actionPaste.setObjectName("actionPaste")
 
         # connecting action to current tab
-        self.actionAbout.triggered.connect(self.tabWidget.openAbout)
+        self.actionAbout.triggered.connect(lambda x: self.tabWidget.openFileUsingPath('./resources/About.txt'))
         self.actionQuit.triggered.connect(self.exit_app)
         self.actionSave.triggered.connect(self.tabWidget.saveTab)
-        self.actionOpen.triggered.connect(self.tabWidget.openTab)
+        self.actionOpen.triggered.connect(self.tabWidget.openFileFromMenu)
         self.actionNewtab.triggered.connect(self.tabWidget.menubar_newtab)
         self.addFolder.triggered.connect(self.tabWidget.folderTab)
         self.addFile.triggered.connect(self.tabWidget.fileTab)
@@ -1057,6 +1027,12 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def treeDblClicked(self, index):
+        print('file name:', self.model.fileName(index))
+        filePath = self.model.filePath(index)
+
+        self.tabWidget.openFileUsingPath(filePath)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
