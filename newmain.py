@@ -426,7 +426,7 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         
         #This is a temporary place holder for the file until we fix constant paths issue
         #it will not work on other machines
-        name = "/Users/james/Desktop/Fall2020/340/team-ironman/resources/About.txt"
+        name = "./resources/About.txt"
         if name != "":
             file = open(name, 'r')
 
