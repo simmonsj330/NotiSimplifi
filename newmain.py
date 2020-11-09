@@ -295,7 +295,7 @@ class NotesTabWidget(QtWidgets.QTabWidget):
     # code from https://pythonprogramming.net/open-files-pyqt-tutorial/
     def openTab(self):
         name, _filter = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File')
-
+        
         if name != "":
             file = open(name, 'r')
 
@@ -331,6 +331,44 @@ class NotesTabWidget(QtWidgets.QTabWidget):
             # since it is already a saved note, we are setting it's
             # saveState to True to turn on "auto save"
             self.currentWidget().saveState = True
+
+    #Mostly same as 'openTab' except we dont manipulate save states and make the file non-editable
+    def openAbout(self):
+        
+        #This is a temporary place holder for the file until we fix constant paths issue
+        #it will not work on other machines
+        name = "/Users/james/Desktop/Fall2020/340/team-ironman/resources/About.txt"
+        if name != "":
+            file = open(name, 'r')
+
+            # strip path and file extension from file name
+            name = os.path.splitext(os.path.basename(name))[0]
+
+            # check to see if file is already open
+            current_tab_names = [self.tabBar().tabText(i) for i in range(self.count())]
+
+            inUse = True
+            try:
+                temp = current_tab_names.index(name)
+            except ValueError:
+                # if exception is hit, the file is not in use
+                inUse = False
+
+            if inUse:
+                self.setCurrentIndex(temp)
+                return
+            
+            # create new tab for file
+            self.add_new_tab()
+
+            # write the files text to the new tab's textedit and setting
+            with file:
+                text = file.read()
+                self.tabBar().setTabText(self.currentIndex(), name)
+                self.currentWidget().plainTextEdit.setText(text)
+            
+            #Setting file to non-editable
+            self.currentWidget().plainTextEdit.setReadOnly(True)
 
     def folderTab(self):
         self.text_name = QLineEdit(self)
@@ -543,6 +581,7 @@ class Ui_MainWindow(object):
 
         # Added this line to show menu bar in the app window
         self.menubar.setNativeMenuBar(False)
+        
         # addMenu.setNativeMenuBar(False)
 
         # Initializing menu bar
@@ -594,6 +633,7 @@ class Ui_MainWindow(object):
         # About and Quit
         self.actionAbout = QtWidgets.QAction(MainWindow)
         self.actionAbout.setObjectName("actionAbout")
+        self.actionAbout.setToolTip('This is action 1')
         self.actionQuit = QtWidgets.QAction(MainWindow)
         self.actionQuit.setObjectName("actionQuit")
 
@@ -616,6 +656,7 @@ class Ui_MainWindow(object):
         self.actionPaste.setObjectName("actionPaste")
 
         # connecting action to current tab
+        self.actionAbout.triggered.connect(self.tabWidget.openAbout)
         self.actionSave.triggered.connect(self.tabWidget.saveTab)
         self.actionOpen.triggered.connect(self.tabWidget.openTab)
         self.actionNewtab.triggered.connect(self.tabWidget.menubar_newtab)
@@ -886,7 +927,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Main Window"))
+        MainWindow.setWindowTitle(_translate("MainWindow", ""))
         # self.pushButton.setText(_translate("MainWindow", "Add"))
 
         # self.toolButton.setText(_translate("MainWindow", "..."))
@@ -904,9 +945,7 @@ class Ui_MainWindow(object):
         self.addFile.setText(_translate("MainWindow", "Notes File"))
         self.addFile.setShortcut(_translate("MainWindow", "Ctrl+N"))
 
-
         self.actionAbout.setText(_translate("MainWindow", "About"))
-
 
         self.actionQuit.setText(_translate("MainWindow", "Quit"))
         self.actionQuit.setShortcut(_translate("MainWindow", "Ctrl+Q"))
