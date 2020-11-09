@@ -263,7 +263,7 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         self.currentWidget().plainTextEdit.undo()
 
     def redoText(self):
-        self.currentWidget().plainTextEdit.undo()
+        self.currentWidget().plainTextEdit.redo()
 
     def setLeftAlign(self):
         self.currentWidget().plainTextEdit.setAlignment(Qt.AlignLeft)
@@ -758,6 +758,8 @@ class Ui_MainWindow(object):
         # connecting action to current tab
         self.actionAbout.triggered.connect(self.tabWidget.openAbout)
         self.actionQuit.triggered.connect(self.exit_app)
+        self.actionUndo.triggered.connect(self.tabWidget.undoText)
+        self.actionRedo.triggered.connect(self.tabWidget.redoText)
         self.actionSave.triggered.connect(self.tabWidget.saveTab)
         self.actionOpen.triggered.connect(self.tabWidget.openTab)
         self.actionNewtab.triggered.connect(self.tabWidget.menubar_newtab)
