@@ -469,6 +469,13 @@ class ErrorDialog(QtWidgets.QDialog):
 
 # A good portion of this is designer code
 class Ui_MainWindow(object):
+
+    #Function to exit out of application
+    def exit_app(self):
+        #Additional checks could go here prior to closing the app
+        #Quits application
+        qApp.quit()
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(747, 601)
@@ -588,6 +595,7 @@ class Ui_MainWindow(object):
         self.menubar.setGeometry(QtCore.QRect(0, 0, 747, 22))
         self.menubar.setObjectName("menubar")
 
+        
         self.menubar.setStyleSheet("""
             background-color: #2b3844;
             color: white;
@@ -607,6 +615,7 @@ class Ui_MainWindow(object):
         self.menu_Add = QtWidgets.QMenu(self.menubar)
         self.menu_Add.setObjectName("menu_Add")
         MainWindow.setMenuBar(self.menubar)
+
 
         # initalize section for add button
         # addMenu.setGeometry(QtCore.QRect(500, 0, 200, 50))
@@ -650,6 +659,8 @@ class Ui_MainWindow(object):
         # Undo and Copy
         self.actionUndo = QtWidgets.QAction(MainWindow)
         self.actionUndo.setObjectName("actionUndo")
+        self.actionRedo = QtWidgets.QAction(MainWindow)
+        self.actionRedo.setObjectName("actionRedo")
         self.actionCopy = QtWidgets.QAction(MainWindow)
         self.actionCopy.setObjectName("actionCopy")
         self.actionPaste = QtWidgets.QAction(MainWindow)
@@ -657,6 +668,7 @@ class Ui_MainWindow(object):
 
         # connecting action to current tab
         self.actionAbout.triggered.connect(self.tabWidget.openAbout)
+        self.actionQuit.triggered.connect(self.exit_app)
         self.actionSave.triggered.connect(self.tabWidget.saveTab)
         self.actionOpen.triggered.connect(self.tabWidget.openTab)
         self.actionNewtab.triggered.connect(self.tabWidget.menubar_newtab)
@@ -680,6 +692,7 @@ class Ui_MainWindow(object):
 
         # Setting layout and separators of 'Edit' drop down actions
         self.menu_Edit.addAction(self.actionUndo)
+        self.menu_Edit.addAction(self.actionRedo)
         self.menu_Edit.addSeparator()
         self.menu_Edit.addAction(self.actionCopy)
         self.menu_Edit.addAction(self.actionPaste)
@@ -965,6 +978,9 @@ class Ui_MainWindow(object):
 
         self.actionUndo.setText(_translate("MainWindow", "Undo"))
         self.actionUndo.setShortcut(_translate("MainWindow", "Ctrl+Z"))
+
+        self.actionRedo.setText(_translate("MainWindow", "Redo"))
+        self.actionRedo.setShortcut(_translate("MainWindow", "Ctrl+Shift+Z"))
 
         self.actionCopy.setText(_translate("MainWindow", "Copy"))
         self.actionCopy.setShortcut(_translate("MainWindow", "Ctrl+C"))
