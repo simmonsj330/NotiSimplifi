@@ -529,6 +529,28 @@ class ErrorDialog(QtWidgets.QDialog):
         self.layout.addWidget(self.btnBox)
         self.setLayout(self.layout)
 
+# class TreeHeader(QtWidgets.QHeaderView):
+#     def __init__(self, orientation, parent=None):
+#         super(TreeHeader, self).__init__(orientation, parent)
+#
+#         self.backButton = QtWidgets.QToolButton()
+#         self.backButton.setToolTip('Add New Tab')
+#         # self.backButton.clicked.connect(self.back)
+#         self.backButton.setIcon(QtGui.QIcon('resources/potential_icons/icons5/png/undo.png'))
+#         self.backButton.setAutoRaise(True)
+#
+#         self.backButton.setStyleSheet("""
+#             QToolButton {
+#                 background-color: #77dd77;
+#                 border-left: 1px solid black;
+#             }
+#             QToolButton::hover {
+#                 background-color: #8be28b;
+#             }
+#             QToolButton::pressed {
+#                 background-color: #b4ecb4;
+#             }
+#             """)
 
 # A good portion of this is designer code
 class Ui_MainWindow(object):
@@ -590,6 +612,11 @@ class Ui_MainWindow(object):
         # print(QDir.setPath(path))
         self.model.setRootPath(QDir.currentPath())
         self.tree = QTreeView()
+
+        # adding custom header
+        # self.treeHeader = TreeHeader(QtCore.Qt.Horizontal)
+        # self.tree.setHeader(self.treeHeader)
+
         self.tree.setModel(self.model)
         self.tree.setRootIndex(self.model.index(QDir.currentPath()))
         self.tree.setGeometry(QtCore.QRect(0, 0, 201, 481))
@@ -684,9 +711,7 @@ class Ui_MainWindow(object):
             QMenuBar:item::selected {
                 background-color: #77dd77;
             }
-        """)
-
-        self.menu_Notisimplifi.setStyleSheet("""
+            
             QMenu {
                 background-color: #2b3844;
                 color: white;
@@ -696,41 +721,6 @@ class Ui_MainWindow(object):
                 background-color: #77dd77;
             }
         """)
-
-        self.menu_File.setStyleSheet("""
-            QMenu {
-                background-color: #2b3844;
-                color: white;
-            }
-            
-            QMenu:item:selected{
-                background-color: #77dd77;
-            }
-        """)
-
-        self.menu_Edit.setStyleSheet("""
-            QMenu {
-                background-color: #2b3844;
-                color: white;
-            }
-            
-            QMenu:item:selected{
-                background-color: #77dd77;
-            }
-        """)
-
-        self.menu_Add.setStyleSheet("""
-            QMenu {
-                background-color: #2b3844;
-                color: white;
-            }
-            
-            QMenu:item:selected{
-                background-color: #77dd77;
-            }
-        """)
-
-
 
         # initalize section for add button
         # addMenu.setGeometry(QtCore.QRect(500, 0, 200, 50))
@@ -1092,7 +1082,8 @@ class Ui_MainWindow(object):
         print('file name:', self.model.fileName(index))
         filePath = self.model.filePath(index)
 
-        self.tabWidget.openFileUsingPath(filePath)
+        if not os.path.isdir(filePath):
+            self.tabWidget.openFileUsingPath(filePath)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
