@@ -661,12 +661,6 @@ class Ui_MainWindow(object):
         self.menubar.setGeometry(QtCore.QRect(0, 0, 747, 22))
         self.menubar.setObjectName("menubar")
 
-        
-        self.menubar.setStyleSheet("""
-            background-color: #2b3844;
-            color: white;
-        """)
-
         # Initializing menu objects
         # Notisimplifi
         self.menu_Notisimplifi = QtWidgets.QMenu(self.menubar)
@@ -681,6 +675,61 @@ class Ui_MainWindow(object):
         self.menu_Add = QtWidgets.QMenu(self.menubar)
         self.menu_Add.setObjectName("menu_Add")
         MainWindow.setMenuBar(self.menubar)
+
+        self.menubar.setStyleSheet("""
+            QMenuBar {
+                background-color: #2b3844;
+                color: white;
+            }
+            QMenuBar:item::selected {
+                background-color: #77dd77;
+            }
+        """)
+
+        self.menu_Notisimplifi.setStyleSheet("""
+            QMenu {
+                background-color: #2b3844;
+                color: white;
+            }
+            
+            QMenu:item:selected{
+                background-color: #77dd77;
+            }
+        """)
+
+        self.menu_File.setStyleSheet("""
+            QMenu {
+                background-color: #2b3844;
+                color: white;
+            }
+            
+            QMenu:item:selected{
+                background-color: #77dd77;
+            }
+        """)
+
+        self.menu_Edit.setStyleSheet("""
+            QMenu {
+                background-color: #2b3844;
+                color: white;
+            }
+            
+            QMenu:item:selected{
+                background-color: #77dd77;
+            }
+        """)
+
+        self.menu_Add.setStyleSheet("""
+            QMenu {
+                background-color: #2b3844;
+                color: white;
+            }
+            
+            QMenu:item:selected{
+                background-color: #77dd77;
+            }
+        """)
+
 
 
         # initalize section for add button
