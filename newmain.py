@@ -92,7 +92,7 @@ class TabPlainTextEdit(QtWidgets.QTextEdit):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
-
+        self.setAutoFormatting(QTextEdit.AutoAll)
 
 class NotesTabWidget(QtWidgets.QTabWidget):
     def __init__(self, parent):
@@ -331,6 +331,16 @@ class NotesTabWidget(QtWidgets.QTabWidget):
 
         textEdit.setCurrentCharFormat(curCharFormat)
 
+    def setBulletList(self):
+        list = QtGui.QTextListFormat()
+        list.setStyle(QtGui.QTextListFormat.ListDisc)
+        self.currentWidget().plainTextEdit.textCursor().insertList(list)
+
+    def setNumberList(self):
+        list = QtGui.QTextListFormat()
+        list.setStyle(QtGui.QTextListFormat.ListDecimal)
+        self.currentWidget().plainTextEdit.textCursor().insertList(list)
+
     def close_tab(self, index):
         # will not close current tab if it's the only tab open
         if self.count() < 2:
@@ -392,8 +402,6 @@ class NotesTabWidget(QtWidgets.QTabWidget):
     def openFileFromMenu(self):
         name, _filter = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File')
 
-        print('name:', name)
-        
         if name != "":
             self.openFileUsingPath(name)
 
@@ -490,8 +498,6 @@ class NotesTabWidget(QtWidgets.QTabWidget):
             temp = namesInUse.index(label)
         except ValueError:
             notInUse = True
-
-            # print('in validName', notInUse)
 
         return notInUse
 
@@ -1033,7 +1039,26 @@ class Ui_MainWindow(object):
         self.leftIdentButton.setToolTip('Indent Left')
         self.leftIdentButton.triggered.connect(self.tabWidget.indentLeft)
         self.tb2.addAction(self.leftIdentButton)
-        # self.tb2.addSeparator()
+
+        self.tb2.addSeparator()
+
+        # bullet list
+        self.bulletList_icon = QtGui.QIcon()
+        self.bulletList_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/list.png"),
+                             QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bulletListButton = QAction(self.bulletList_icon, '', self.tb2)
+        self.bulletListButton.setToolTip('Bulleted List')
+        self.bulletListButton.triggered.connect(self.tabWidget.setBulletList)
+        self.tb2.addAction(self.bulletListButton)
+
+        # numbered list
+        self.numberList_icon = QtGui.QIcon()
+        self.numberList_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/list-1.png"),
+                                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.numberListButton = QAction(self.numberList_icon, '', self.tb2)
+        self.numberListButton.setToolTip('Numbered List')
+        self.numberListButton.triggered.connect(self.tabWidget.setNumberList)
+        self.tb2.addAction(self.numberListButton)
 
         # QToolBar::separator:horizontal {
         #   image: url("./resources/potential_icons/icons5/png/separator-gray.png");
@@ -1089,7 +1114,6 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def treeDblClicked(self, index):
-        print('file name:', self.model.fileName(index))
         filePath = self.model.filePath(index)
 
         self.tabWidget.openFileUsingPath(filePath)
