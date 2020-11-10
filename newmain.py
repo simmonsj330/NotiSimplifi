@@ -210,6 +210,13 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         # self.setUpdatesEnabled(True)
         self.setCurrentWidget(self.tab)
 
+
+    def copyText(self):
+        self.currentWidget().plainTextEdit.copy()
+
+    def pasteText(self):
+        self.currentWidget().plainTextEdit.paste()
+
     # toolbar functions that make the buttons work
     def setItalic(self):
         italic = self.currentWidget().plainTextEdit.fontItalic()
@@ -730,6 +737,8 @@ class Ui_MainWindow(object):
         self.actionQuit.triggered.connect(self.exit_app)
         self.actionUndo.triggered.connect(self.tabWidget.undoText)
         self.actionRedo.triggered.connect(self.tabWidget.redoText)
+        self.actionCopy.triggered.connect(self.tabWidget.copyText)
+        self.actionPaste.triggered.connect(self.tabWidget.pasteText)
         self.actionSave.triggered.connect(self.tabWidget.saveTab)
         self.actionOpen.triggered.connect(self.tabWidget.openFileFromMenu)
         self.actionNewtab.triggered.connect(self.tabWidget.menubar_newtab)
