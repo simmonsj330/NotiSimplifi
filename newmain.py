@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
 # Source code for NotiSimplifi
+
 # Authors: Team Ironman -- James, Terryl, and Ryan
 
 import glob
 import os
 import sys
+import unittest
 import xml.etree.ElementTree as et
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -13,6 +15,44 @@ from PyQt5.QtCore import QEventLoop, QTimer, Qt, QSize, QDir
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter, QPrintPreviewDialog
+
+
+app = QtWidgets.QApplication(sys.argv)
+
+
+class TabWidgetTest(unittest.TestCase):
+    def setUp(self):
+        self.widget = NotesTabWidget()
+
+    # test to make sure newly added tab from add_new_tab() is set to the current tab
+    def test_addNewTab_isCurrentTab(self):
+        index = self.widget.add_new_tab()
+
+        # assert that new tab has been set to the current tab
+        self.assertEqual(index, self.widget.currentIndex())
+
+        # close the tab we just made
+        self.widget.close_tab(index)
+
+    # test to see that close_tab() will not close a tab if it is the only tab open
+    def test_closeTab_OnlyTabOpen(self):
+        index = self.widget.currentIndex()
+
+        # test that close tab will not close tab if it is the only tab open
+        self.widget.close_tab(index)
+        self.assertEqual(index, self.widget.currentIndex())
+
+    # test to see that close_tab() closes the correct tab
+    def test_closeTab(self):
+        tabName = 'testnote'
+        newIndex = self.widget.add_new_tab(tabName)
+
+        # test that the newly added tab was closed
+        self.widget.close_tab(newIndex)
+        for i in range(self.widget.count()):
+            print('tabtext[i]:', self.widget.tabBar().tabText(i))
+            print('tabName:', tabName)
+            self.assertNotEqual(self.widget.tabBar().tabText(i), tabName)
 
 
 class TabBar(QTabBar):
@@ -94,8 +134,9 @@ class TabPlainTextEdit(QtWidgets.QTextEdit):
         self.setSizePolicy(sizePolicy)
         self.setAutoFormatting(QTextEdit.AutoAll)
 
+
 class NotesTabWidget(QtWidgets.QTabWidget):
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super(NotesTabWidget, self).__init__(parent)
         self.parent = parent
         self.initUI()
@@ -206,10 +247,11 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         # the open tabs or an already saved note
 
         # label = self.get_valid_name(label)
-        self.addTab(self.tab, label)
+        index = self.addTab(self.tab, label)
         # self.setUpdatesEnabled(True)
         self.setCurrentWidget(self.tab)
 
+        return index
 
     def copyText(self):
         self.currentWidget().plainTextEdit.copy()
@@ -443,7 +485,7 @@ class NotesTabWidget(QtWidgets.QTabWidget):
 
     def folderTab(self):
         self.text_name = QLineEdit(self)
-        self.text_name.move(100,22)
+        self.text_name.move(100, 22)
         self.text_name.setPlaceholderText("Enter folder name:")
 
         text, result = QInputDialog.getText(self, 'Add Folder', 'Folder Name:')
@@ -454,7 +496,7 @@ class NotesTabWidget(QtWidgets.QTabWidget):
 
     def fileTab(self):
         self.text_name = QLineEdit(self)
-        self.text_name.move(100,22)
+        self.text_name.move(100, 22)
         self.text_name.setPlaceholderText("Enter file name:")
 
         text, result = QInputDialog.getText(self, 'Add File', 'File Name:')
@@ -463,11 +505,11 @@ class NotesTabWidget(QtWidgets.QTabWidget):
             self.add_new_tab()
             path = QDir.currentPath()
             os.system('touch ' + path + '/' + text + '.txt')
-            
+
             index = self.currentIndex()
             nameChange = self.savedTabNameChange(text)
             if nameChange:
-                self.setTabText(index, text) 
+                self.setTabText(index, text)
 
     def savedTabNameChange(self, newName):
         if self.tab.saveState == False:
@@ -535,6 +577,7 @@ class ErrorDialog(QtWidgets.QDialog):
         self.layout.addWidget(self.btnBox)
         self.setLayout(self.layout)
 
+
 # class TreeHeader(QtWidgets.QHeaderView):
 #     def __init__(self, orientation, parent=None):
 #         super(TreeHeader, self).__init__(orientation, parent)
@@ -561,10 +604,10 @@ class ErrorDialog(QtWidgets.QDialog):
 # A good portion of this is designer code
 class Ui_MainWindow(object):
 
-    #Function to exit out of application
+    # Function to exit out of application
     def exit_app(self):
-        #Additional checks could go here prior to closing the app
-        #Quits application
+        # Additional checks could go here prior to closing the app
+        # Quits application
         qApp.quit()
 
     def setupUi(self, MainWindow):
@@ -687,7 +730,7 @@ class Ui_MainWindow(object):
 
         # Added this line to show menu bar in the app window
         self.menubar.setNativeMenuBar(False)
-        
+
         # addMenu.setNativeMenuBar(False)
 
         # Initializing menu bar
@@ -1035,7 +1078,7 @@ class Ui_MainWindow(object):
         # bullet list
         self.bulletList_icon = QtGui.QIcon()
         self.bulletList_icon.addPixmap(QtGui.QPixmap("resources/potential_icons/icons5/png/list.png"),
-                             QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.bulletListButton = QAction(self.bulletList_icon, '', self.tb2)
         self.bulletListButton.setToolTip('Bulleted List')
         self.bulletListButton.triggered.connect(self.tabWidget.setBulletList)
@@ -1143,7 +1186,6 @@ class Ui_MainWindow(object):
         self.actionSave.setText(_translate("MainWindow", "Save"))
         self.actionSave.setShortcut(_translate("MainWindow", "Ctrl+S"))
 
-
         self.actionSaveas.setText(_translate("MainWindow", "Save As..."))
         self.actionSaveas.setShortcut(_translate("MainWindow", "Ctrl+Shift+S"))
 
@@ -1159,9 +1201,10 @@ class Ui_MainWindow(object):
         self.actionPaste.setText(_translate("MainWindow", "Paste"))
         self.actionPaste.setShortcut(_translate("MainWindow", "Ctrl+V"))
 
+
 # executes program
 if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
+    # app = QtWidgets.QApplication(sys.argv)
 
     # Splash screen & logo
     logo_path = os.path.dirname(os.path.realpath(__file__))
