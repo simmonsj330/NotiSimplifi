@@ -578,28 +578,16 @@ class ErrorDialog(QtWidgets.QDialog):
         self.setLayout(self.layout)
 
 
-# class TreeHeader(QtWidgets.QHeaderView):
-#     def __init__(self, orientation, parent=None):
-#         super(TreeHeader, self).__init__(orientation, parent)
-#
-#         self.backButton = QtWidgets.QToolButton()
-#         self.backButton.setToolTip('Add New Tab')
-#         # self.backButton.clicked.connect(self.back)
-#         self.backButton.setIcon(QtGui.QIcon('resources/potential_icons/icons5/png/undo.png'))
-#         self.backButton.setAutoRaise(True)
-#
-#         self.backButton.setStyleSheet("""
-#             QToolButton {
-#                 background-color: #77dd77;
-#                 border-left: 1px solid black;
-#             }
-#             QToolButton::hover {
-#                 background-color: #8be28b;
-#             }
-#             QToolButton::pressed {
-#                 background-color: #b4ecb4;
-#             }
-#             """)
+class TreeHeader(QtWidgets.QHeaderView):
+    def __init__(self, orientation, parent=None):
+        super(TreeHeader, self).__init__(orientation, parent)
+
+        self.setStyleSheet("""
+            background-color: #77dd77;
+            color: white;
+        """)
+        self.setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
+        self.setDefaultSectionSize(198)
 
 # A good portion of this is designer code
 class Ui_MainWindow(object):
@@ -662,10 +650,6 @@ class Ui_MainWindow(object):
         self.model.setRootPath(QDir.currentPath())
         self.tree = QTreeView()
 
-        # adding custom header
-        # self.treeHeader = TreeHeader(QtCore.Qt.Horizontal)
-        # self.tree.setHeader(self.treeHeader)
-
         self.tree.setModel(self.model)
         self.tree.setRootIndex(self.model.index(QDir.currentPath()))
         self.tree.setGeometry(QtCore.QRect(0, 0, 201, 481))
@@ -679,11 +663,45 @@ class Ui_MainWindow(object):
 
         self.tree.setWindowTitle("Dir View")
 
+        self.treeHeader = TreeHeader(QtCore.Qt.Horizontal)
+        self.treeHeader.setMinimumWidth(self.tree.width())
+        self.tree.setHeader(self.treeHeader)
+
         # https://stackoverflow.com/questions/58937754/hide-size-type-and-date-modified-columns-in-qfilesystemmodel
         for i in range(1, self.tree.model().columnCount()):
             self.tree.header().hideSection(i)
 
+        # adding custom header
         self.verticalLayout_3.addWidget(self.tree)
+
+        #b4ecb4
+        self.tree.setStyleSheet("""
+            QTreeView::branch:has-siblings:!adjoins-item {
+                border-image: url(resources/tree_icons/vline-lightgreen.png) 0;
+            }
+
+            QTreeView::branch:has-siblings:adjoins-item {
+                border-image: url(resources/tree_icons/branch-more-lightgreen.png) 0;
+            }
+            
+            QTreeView::branch:!has-children:!has-siblings:adjoins-item {
+                border-image: url(resources/tree_icons/branch-end-lightgreen.png) 0;
+            }
+            
+            QTreeView::branch:has-children:!has-siblings:closed,
+            QTreeView::branch:closed:has-children:has-siblings {
+                border-image: none;
+                image: url(resources/tree_icons/right-arrow.png);
+            }
+            
+            QTreeView::branch:open:has-children:!has-siblings,
+            QTreeView::branch:open:has-children:has-siblings  {
+                border-image: none;
+                image: url(resources/tree_icons/down-arrow.png);
+            }
+        """)
+        # image: url(resources/tree_icons/branch-open.png);
+
 
         self.Tags.setStyleSheet("""
             background-color: #282f39;
