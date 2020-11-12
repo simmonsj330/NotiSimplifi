@@ -9,6 +9,7 @@ import os
 import sys
 import unittest
 import xml.etree.ElementTree as et
+import unittest
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QEventLoop, QTimer, Qt, QSize, QDir
@@ -54,6 +55,22 @@ class TabWidgetTest(unittest.TestCase):
             print('tabName:', tabName)
             self.assertNotEqual(self.widget.tabBar().tabText(i), tabName)
 
+    def test_openFileUsingPath(self):
+        tabName = 'newmain'
+        newIndex = self.widget.openFileUsingPath("newmain.py")
+        self.assertEqual(self.widget.tabBar().tabText(newIndex), "newmain")
+
+    def test_folderTab(self):
+        path = QDir.currentPath()
+        self.widget.folderTab('test')
+
+        self.assertTrue(os.path.isdir('test'))
+    
+    def test_fileTab(self):
+        path = QDir.currentPath()
+        self.widget.fileTab('test')
+
+        self.assertTrue(os.path.isfile('test.txt'))
 
 class TabBar(QTabBar):
     def __init__(self, parent):
@@ -483,33 +500,49 @@ class NotesTabWidget(QtWidgets.QTabWidget):
         else:
             self.currentWidget().saveState = True
 
-    def folderTab(self):
-        self.text_name = QLineEdit(self)
-        self.text_name.move(100, 22)
-        self.text_name.setPlaceholderText("Enter folder name:")
+        return self.currentIndex()
 
-        text, result = QInputDialog.getText(self, 'Add Folder', 'Folder Name:')
-        if result == True:
-            self.text_name.setText(str(text))
-            path = QDir.currentPath()
-            os.mkdir(path + '/' + text)
+    def folderTab(self, folderName=''):
+        path = QDir.currentPath()
 
-    def fileTab(self):
-        self.text_name = QLineEdit(self)
-        self.text_name.move(100, 22)
-        self.text_name.setPlaceholderText("Enter file name:")
+        if not folderName:
+            self.text_name = QLineEdit(self)
+            self.text_name.move(100, 22)
+            self.text_name.setPlaceholderText("Enter folder name:")
 
-        text, result = QInputDialog.getText(self, 'Add File', 'File Name:')
-        if result == True:
-            self.text_name.setText(str(text))
-            self.add_new_tab()
-            path = QDir.currentPath()
-            os.system('touch ' + path + '/' + text + '.txt')
+            text, result = QInputDialog.getText(self, 'Add Folder', 'Folder Name:')
+            if result == True:
+                self.text_name.setText(str(text))
+                os.mkdir(path + '/' + text)
+        
+        else:
+            os.mkdir(path + '/' + folderName)
 
-            index = self.currentIndex()
-            nameChange = self.savedTabNameChange(text)
-            if nameChange:
-                self.setTabText(index, text)
+        return os.path.isdir(folderName)
+
+    def fileTab(self, fileName=''):
+        path = QDir.currentPath()
+
+        if not fileName:
+            self.text_name = QLineEdit(self)
+            self.text_name.move(100, 22)
+            self.text_name.setPlaceholderText("Enter file name:")
+
+            text, result = QInputDialog.getText(self, 'Add File', 'File Name:')
+            if result == True:
+                self.text_name.setText(str(text))
+                self.add_new_tab()
+                os.system('touch ' + path + '/' + text + '.txt')
+
+                index = self.currentIndex()
+                nameChange = self.savedTabNameChange(text)
+                if nameChange:
+                    self.setTabText(index, text)
+        
+        else:
+            os.system('touch ' + path + '/' + fileName + '.txt')
+
+        return os.path.isfile(fileName)
 
     def savedTabNameChange(self, newName):
         if self.tab.saveState == False:
@@ -1218,7 +1251,6 @@ class Ui_MainWindow(object):
 
         self.actionPaste.setText(_translate("MainWindow", "Paste"))
         self.actionPaste.setShortcut(_translate("MainWindow", "Ctrl+V"))
-
 
 # executes program
 if __name__ == "__main__":
