@@ -54,7 +54,7 @@ class TabWidgetTest(unittest.TestCase):
             print('tabtext[i]:', self.widget.tabBar().tabText(i))
             print('tabName:', tabName)
             self.assertNotEqual(self.widget.tabBar().tabText(i), tabName)
-
+            
     def test_openFileUsingPath(self):
         tabName = 'newmain'
         newIndex = self.widget.openFileUsingPath("newmain.py")
@@ -71,6 +71,25 @@ class TabWidgetTest(unittest.TestCase):
         self.widget.fileTab('test')
 
         self.assertTrue(os.path.isfile('test.txt'))
+    
+    # test to see if an obviously unique file name returns a valid true
+    def test_validname_knowntrue(self):
+        self.assertEqual(self.widget.validName('foobar'), True)
+    
+    # checking to see if an already known file name returns false
+    def test_validname_knownfalse(self):
+        self.assertEqual(self.widget.validName('untitled'), False)
+    
+    # checking to see if unsaved tab can change names
+    def test_namechange(self):
+        #self.widget.openFileUsingPath('/Users/james/Desktop/Fall2020/340/team-ironman/saved_notes/hold.txt')
+        self.assertEqual(self.widget.savedTabNameChange('foobar'), True)
+    
+    # test to see if application closes if everything is already saved
+    def test_exitapp_state_true(self):
+       # setting save state
+        self.widget.set_savestate_true()
+        self.assertEqual(self.widget.exit_app(), True)
 
 class TabBar(QTabBar):
     def __init__(self, parent):
@@ -579,6 +598,37 @@ class NotesTabWidget(QtWidgets.QTabWidget):
     def menubar_newtab(self):
         self.add_new_tab()
 
+    # Function to exit out of application
+    def exit_app(self):
+        # additional check to make sure you save before you exit
+        # if not already saved, it asks you if you want to save
+        if self.tab.saveState == True:
+            # Quits application
+            qApp.quit()
+            return True
+
+        else:
+            self.checker = QMessageBox.question(self, '', "Would you like to save before exiting?", QMessageBox.Yes | QMessageBox.No)
+            # if yes then it saves and exits
+            if self.checker == QMessageBox.Yes:
+                newName, saved = QInputDialog.getText(self, '', 'New file name:')
+                # if you hit ok then it saves and exits
+                if saved:
+                    self.saveTab(newName)
+                    qApp.quit()
+                    return True
+                # if you hit cancel it cancels out of everything
+                else:
+                    return False
+            # if no it simply exits out of the app
+            else:
+                qApp.quit()
+                return False
+       
+    #simple helper function for testing to set save state
+    def set_savestate_true(self):
+        self.tab.saveState = True
+
 
 class ErrorDialog(QtWidgets.QDialog):
     def __init__(self, parent, message):
@@ -625,11 +675,8 @@ class TreeHeader(QtWidgets.QHeaderView):
 # A good portion of this is designer code
 class Ui_MainWindow(object):
 
-    # Function to exit out of application
-    def exit_app(self):
-        # Additional checks could go here prior to closing the app
-        # Quits application
-        qApp.quit()
+    
+        
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -873,7 +920,7 @@ class Ui_MainWindow(object):
 
         # connecting action to current tab
         self.actionAbout.triggered.connect(lambda x: self.tabWidget.openFileUsingPath('./resources/About.txt'))
-        self.actionQuit.triggered.connect(self.exit_app)
+        self.actionQuit.triggered.connect(self.tabWidget.exit_app)
         self.actionUndo.triggered.connect(self.tabWidget.undoText)
         self.actionRedo.triggered.connect(self.tabWidget.redoText)
         self.actionCopy.triggered.connect(self.tabWidget.copyText)
